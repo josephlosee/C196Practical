@@ -1,0 +1,26 @@
+Classes:
+
+Term
+	-has multiple courses
+	-add courses
+	-remove courses w/ confirmation
+	
+Courses:
+	-assessments
+	-course information
+	-Notes
+	-Due Date
+	-Start and End date
+
+Notes
+	-can take picture of notes, or write them
+	-can share notes via sharing feature
+	
+Student
+
+Term List
+	-
+	
+Course List	
+	-Shows all courses by term
+	
