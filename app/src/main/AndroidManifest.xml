@@ -26,7 +26,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".CreateTermActivity"
+            android:name=".EditTermActivity"
             android:label="@string/title_activity_create_term"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
