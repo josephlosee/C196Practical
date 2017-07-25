@@ -6,4 +6,7 @@
     <string name="term_name">Term Name</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="title_activity_view_term">ViewTermActivity</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="title_activity_assessment">AssessmentActivity</string>
 </resources>

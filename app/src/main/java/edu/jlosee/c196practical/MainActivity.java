@@ -1,11 +1,14 @@
 package edu.jlosee.c196practical;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,21 +18,31 @@ import android.widget.SimpleCursorAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
+    public DBProvider dbProvider;// = new DBProvider(this.getApplicationContext());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        dbProvider = new DBProvider(this.getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.TITLE, "Term 2");
+        Cursor test = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
+        if (test.moveToFirst()){
+            do{
+                Log.d("MainActivity", "ID: " + test.getString(1));
+            }while (test.moveToNext());
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DBOpenHelper.TITLE, "Term 3");
         simpleDateFormat.setCalendar(Calendar.getInstance());
         String startDate = simpleDateFormat.format(Calendar.getInstance().getTime());
         //simpleDateFormat.
@@ -41,12 +54,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "Created end date: "+ endDate);
         values.put(DBOpenHelper.START_DATE, startDate);
         values.put(DBOpenHelper.END_DATE, endDate);
-        Uri termUri = getContentResolver().insert(DBProvider.COURSE_URI, values);
-        Log.d("MainActivity", "Inserted term " + termUri.getLastPathSegment());*/
+        Uri termUri = dbProvider.insert(DBProvider.TERM_URI, values);
+        Log.d("MainActivity", "Inserted term " + termUri.getLastPathSegment());
 
         ListView termListView = (ListView)findViewById(R.id.termList);
 
-        Cursor cursor = getContentResolver().query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null, null);
+        Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
         String[] from = {DBOpenHelper.TITLE};
         int[] to = {android.R.id.text1};
         CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
@@ -74,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.add("test");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

@@ -1,11 +1,15 @@
 package edu.jlosee.c196practical;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,7 +18,7 @@ import android.util.Log;
  * Created by Joe on 7/16/2017.
  */
 
-public class DBProvider extends ContentProvider {
+public class DBProvider{//} extends ContentProvider {
     private static final String AUTHORITY = "edu.jlosee.c196practical.dbprovider";
     private static final String BASE_PATH = "notes";
     public static final Uri TERM_URI = Uri.parse("content://"+AUTHORITY+"/"+DBOpenHelper.TABLE_TERM);
@@ -34,7 +38,6 @@ public class DBProvider extends ContentProvider {
     private static final int NOTES_IMG = 5;
     private static final int NOTES_IMG_ID = 5;
 
-
     private static final UriMatcher uriMatcher = new UriMatcher((UriMatcher.NO_MATCH));
 
     static {
@@ -52,16 +55,15 @@ public class DBProvider extends ContentProvider {
 
     private SQLiteDatabase database;
 
-    @Override
-    public boolean onCreate() {
-        DBOpenHelper helper = new DBOpenHelper(getContext());
+    //@Override
+    public DBProvider(Context context) {
+        DBOpenHelper helper = new DBOpenHelper(context);
         database = helper.getWritableDatabase();
-        return true;
     }
 
     @Nullable
-    @Override
-    //TODO: need to update this to figure out how to query specific tables?
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        //TODO: need to update this to figure out how to query specific tables?
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor ret = null;
         switch(uriMatcher.match(uri)){
@@ -89,13 +91,13 @@ public class DBProvider extends ContentProvider {
     }
 
     @Nullable
-    @Override
+    //@Override
     public String getType(@NonNull Uri uri) {
         return null;
     }
 
     @Nullable
-    @Override
+    //@Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         long id = -1;
         switch(uriMatcher.match(uri)){
@@ -122,12 +124,12 @@ public class DBProvider extends ContentProvider {
         return Uri.parse(BASE_PATH+"/"+id);
     }
 
-    @Override
+    //@Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         return database.delete(DBOpenHelper.TABLE_TERM, selection, selectionArgs);
     }
 
-    @Override
+    //@Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         return database.update(DBOpenHelper.TABLE_TERM, contentValues, selection, selectionArgs);
     }
