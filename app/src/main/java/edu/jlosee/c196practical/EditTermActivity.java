@@ -36,6 +36,7 @@ public class EditTermActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Start Date Dialog Picker setup
         final DatePickerDialog.OnDateSetListener startDate = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -49,6 +50,7 @@ public class EditTermActivity extends AppCompatActivity {
             }
         };
 
+        //End Date Dialog Picker setup
         final DatePickerDialog.OnDateSetListener endDate = new DatePickerDialog.OnDateSetListener() {
 
             @Override

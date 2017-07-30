@@ -6,12 +6,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -22,6 +24,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TERM_ID = "termID";
     private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
             }while (test.moveToNext());
         }
 
-        ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.TITLE, "Term 3");
+        //ContentValues values = new ContentValues();
+        //values.put(DBOpenHelper.TITLE, "Term 3");
         simpleDateFormat.setCalendar(Calendar.getInstance());
         String startDate = simpleDateFormat.format(Calendar.getInstance().getTime());
         //simpleDateFormat.
@@ -52,19 +55,35 @@ public class MainActivity extends AppCompatActivity {
         cal.add(Calendar.MONTH, 6);
         String endDate = simpleDateFormat.format(cal.getTime());
         Log.d("MainActivity", "Created end date: "+ endDate);
-        values.put(DBOpenHelper.START_DATE, startDate);
-        values.put(DBOpenHelper.END_DATE, endDate);
-        Uri termUri = dbProvider.insert(DBProvider.TERM_URI, values);
-        Log.d("MainActivity", "Inserted term " + termUri.getLastPathSegment());
+        //values.put(DBOpenHelper.START_DATE, startDate);
+        //values.put(DBOpenHelper.END_DATE, endDate);
+        //Uri termUri = dbProvider.insert(DBProvider.TERM_URI, values);
+        //Log.d("MainActivity", "Inserted term " + termUri.getLastPathSegment());
 
         ListView termListView = (ListView)findViewById(R.id.termList);
 
-        Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
+        final Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
         String[] from = {DBOpenHelper.TITLE};
         int[] to = {android.R.id.text1};
         CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
         termListView.setAdapter(cursAdaptor);
-        //termListView.ad
+
+        termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                                    Intent intent = new Intent(MainActivity.this, ViewTermActivity.class);
+                                                    int test = -1;
+                                                    if (cursor.moveToPosition(position)){
+                                                        test = cursor.getInt(cursor.getColumnIndex("_id"));
+                                                        Snackbar.make(view, ""+test, Snackbar.LENGTH_LONG).show();
+                                                    }
+                                                    intent.putExtra(TERM_ID, test);
+                                                    //startActivity(intent);
+
+                                                }
+                                            });
+
+                //termListView.ad
 
 
         /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -73,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(takePictureIntent, REQ_IMG_CAP);
         }*/
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//TODO: Make this a Add Term Button? Share?
@@ -87,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menu.add("test");
+        int TESTID = 4;
+        menu.add(Menu.NONE, TESTID, Menu.NONE, "test");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -101,7 +121,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Snackbar.make(this.getCurrentFocus(), "Action Settings Selection", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else if (id==4){
+            Snackbar.make(this.getCurrentFocus(), "test was selected", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
 
         return super.onOptionsItemSelected(item);
