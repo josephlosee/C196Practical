@@ -14,5 +14,9 @@ public class Course {
     private ArrayList<Note> courseNotes;
     private ArrayList<Assessment> assessmentList;
     Calendar startDate, endDate;
+    String couseTitle, courseDescription;
+    Mentor mentor;
+
+
 
 }

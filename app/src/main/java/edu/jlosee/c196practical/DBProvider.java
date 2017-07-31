@@ -26,6 +26,7 @@ public class DBProvider{//} extends ContentProvider {
     public static final Uri COURSE_URI = Uri.parse("content://"+AUTHORITY+"/"+DBOpenHelper.TABLE_COURSE);
     public static final Uri ASSESSMENT_URI = Uri.parse("content://"+AUTHORITY+"/"+DBOpenHelper.TABLE_ASSESSMENT);
     public static final Uri NOTE_IMAGE_URI = Uri.parse("content://"+AUTHORITY+"/"+DBOpenHelper.TABLE_NOTE_IMAGE);
+    public static final Uri MENTOR_URI = Uri.parse("content://"+AUTHORITY+"/"+DBOpenHelper.TABLE_MENTOR);
 
     private static final int TERM = 1;
     private static final int TERM_ID = 1;
@@ -37,6 +38,8 @@ public class DBProvider{//} extends ContentProvider {
     private static final int ASSESSMENT_ID = 4;
     private static final int NOTES_IMG = 5;
     private static final int NOTES_IMG_ID = 5;
+    private static final int MENTOR = 6;
+    private static final int MENTOR_ID = 6;
 
     private static final UriMatcher uriMatcher = new UriMatcher((UriMatcher.NO_MATCH));
 
@@ -46,24 +49,27 @@ public class DBProvider{//} extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_COURSE, COURSE);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_ASSESSMENT, ASSESSMENT);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_NOTE_IMAGE, NOTES_IMG);
+        uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_MENTOR, MENTOR);
+
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_NOTES+"/#",NOTES_ID);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_TERM+"/#",TERM_ID);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_COURSE+"/#",COURSE_ID);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_ASSESSMENT+"/#",ASSESSMENT_ID);
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_NOTE_IMAGE+"/#",NOTES_IMG_ID);
+        uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_MENTOR+"/#",MENTOR_ID);
     }
 
     private SQLiteDatabase database;
+    private DBOpenHelper helper;
 
     //@Override
     public DBProvider(Context context) {
-        DBOpenHelper helper = new DBOpenHelper(context);
+        helper = new DBOpenHelper(context);
         database = helper.getWritableDatabase();
     }
 
     @Nullable
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-        //TODO: need to update this to figure out how to query specific tables?
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor ret = null;
         switch(uriMatcher.match(uri)){
@@ -132,5 +138,9 @@ public class DBProvider{//} extends ContentProvider {
     //@Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         return database.update(DBOpenHelper.TABLE_TERM, contentValues, selection, selectionArgs);
+    }
+
+    public void wipeDatabase(){
+        this.helper.onUpgrade(database, 1, 1);
     }
 }

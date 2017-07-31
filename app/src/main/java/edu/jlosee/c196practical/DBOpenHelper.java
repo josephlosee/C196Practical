@@ -19,6 +19,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_ASSESSMENT = "Assessment";
     public static final String TABLE_NOTE_IMAGE = "Course_Image";
     public static final String TABLE_TERM = "Term";
+    public static final String TABLE_MENTOR = "Mentor";
 
     //Note Specific Strings
     public static final String NOTE_TEXT = "noteText";
@@ -56,11 +57,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_COURSE + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     TITLE + " TEXT, " +
-                    MENTOR + " TEXT, " +
+                    MENTOR + " INTEGER, " +
                     COURSE_CODE + "TEXT, " +
                     START_DATE + " TEXT, "+
                     END_DATE + " TEXT, "+
-                    COURSE_STATUS + " TINYINT, " +
+                    COURSE_STATUS + " TEXT, " +
                     TABLE_ID+TABLE_TERM + " INTEGER, " +
                     "FOREIGN KEY(" + TABLE_ID+TABLE_TERM + ") REFERENCES " +TABLE_TERM + " ("+TABLE_ID+ "))";
     //Course complete
@@ -74,6 +75,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP," +
                     TABLE_ID+TABLE_COURSE + " INTEGER, " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
+
     //Note Complete
     private static final String NOTES_IMAGES_CREATE =
             "CREATE TABLE " + TABLE_NOTE_IMAGE + " (" +
@@ -86,12 +88,20 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String ASSESSMENT_CREATE =
             "CREATE TABLE " + TABLE_ASSESSMENT + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ASSESSMENT_DUE_DATE + "TEXT, "+
-                    ASSESSMENT_IS_OBJECTIVE + "BOOLEAN, "+
+                    ASSESSMENT_DUE_DATE + " TEXT, "+
+                    ASSESSMENT_IS_OBJECTIVE + " BOOLEAN, "+
                     ASSESSMENT_TARGET_SCORE + " INTEGER," +
                     ASSESSMENT_EARNED_SCORE + " INTEGER," +
                     TABLE_ID+TABLE_COURSE + " INTEGER, " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
+
+    public static final String MENTOR_NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phone";
+
+    private static final String MENTOR_CREATE = "CREATE TABLE " + TABLE_MENTOR + " (" +
+            TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MENTOR_NAME + " TEXT, " + EMAIL + " TEXT, " + PHONE + " TEXT)";
 
     public static final String[] ALL_TERM_COLS =
             {TABLE_ID, TITLE, START_DATE, END_DATE};
@@ -107,11 +117,19 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(NOTES_CREATE);
         sqLiteDatabase.execSQL(NOTES_IMAGES_CREATE);
         sqLiteDatabase.execSQL(ASSESSMENT_CREATE);
+        sqLiteDatabase.execSQL(MENTOR_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS +" + TABLE_TERM);
         this.onCreate(sqLiteDatabase);
+    }
+
+    //Debug Function
+    public void fillWithTestData(SQLiteDatabase sqLiteDatabase){
+        this.onUpgrade(sqLiteDatabase, 1, 1);
+
+        //String term = "INSERT INTO "
     }
 }
