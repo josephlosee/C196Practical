@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TERM_ID = "termID";
+    public static final String TERM_ID = "termID";
     private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public final int TESTID = 4;
     public final int FILL_WITH_TEST_DATA_ID = 123;
 
-    public DBProvider dbProvider;// = new DBProvider(this.getApplicationContext());
+    public static DBProvider dbProvider;// = new DBProvider(this.getApplicationContext());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         dbProvider = new DBProvider(this.getApplicationContext());
@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
             start.add(Calendar.MONTH, 3*t);
             end.add(Calendar.MONTH, 3*t+1);
             term.put(DBOpenHelper.TITLE, "Term "+(t+1));
-            term.put(DBOpenHelper.START_DATE, simpleDateFormat.format(start));
-            term.put(DBOpenHelper.END_DATE, simpleDateFormat.format(start));
+            term.put(DBOpenHelper.START_DATE, simpleDateFormat.format(start.getTime()));
+            term.put(DBOpenHelper.END_DATE, simpleDateFormat.format(start.getTime()));
 
             Uri insertedTerm = provider.insert(DBProvider.TERM_URI, term);
             int termID = Integer.parseInt(insertedTerm.getLastPathSegment());
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                     assessment.put(DBOpenHelper.ASSESSMENT_EARNED_SCORE, 0);
                     assessment.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
 
-                    provider.insert(DBProvider.ASSESSMENT_URI, notes);
+                    provider.insert(DBProvider.ASSESSMENT_URI, assessment);
 
                     /*
                         private static final String ASSESSMENT_CREATE =

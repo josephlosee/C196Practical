@@ -70,23 +70,24 @@ public class DBProvider{//} extends ContentProvider {
 
     @Nullable
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] columns, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor ret = null;
         switch(uriMatcher.match(uri)){
             case TERM:
-                ret = database.query(DBOpenHelper.TABLE_TERM, projection, selection, null, null, null, DBOpenHelper.START_DATE+" DESC");
+                ret = database.query(DBOpenHelper.TABLE_TERM, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             case COURSE:
-                ret = database.query(DBOpenHelper.TABLE_COURSE, projection, selection, null, null, null, DBOpenHelper.START_DATE+" DESC");
+                //ret = database.query(DBOpenHelper.TABLE_COURSE, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
+                ret = database.query(DBOpenHelper.TABLE_COURSE, null, null, null, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             case ASSESSMENT:
-                ret = database.query(DBOpenHelper.TABLE_ASSESSMENT, projection, selection, null, null, null, DBOpenHelper.START_DATE+" DESC");
+                ret = database.query(DBOpenHelper.TABLE_ASSESSMENT, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             case NOTES:
-                ret = database.query(DBOpenHelper.TABLE_NOTES, projection, selection, null, null, null, DBOpenHelper.START_DATE+" DESC");
+                ret = database.query(DBOpenHelper.TABLE_NOTES, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             case NOTES_IMG:
-                ret = database.query(DBOpenHelper.TABLE_NOTE_IMAGE, projection, selection, null, null, null, DBOpenHelper.START_DATE+" DESC");
+                ret = database.query(DBOpenHelper.TABLE_NOTE_IMAGE, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             default:
                 Log.d("DBProvider", "No match found for URI: "+uri.toString());

@@ -1,6 +1,7 @@
 package edu.jlosee.c196practical;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import java.util.Calendar;
 
@@ -23,15 +25,28 @@ public class EditTermActivity extends AppCompatActivity {
     Calendar startCalendar = Calendar.getInstance();
     Calendar endCalendar = Calendar.getInstance();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Intent testIntent = getIntent();
+        Bundle extras = testIntent.getExtras();
+
+        //Todo: Fill in information from passed TERM_ID extra
+
+        if (extras != null){
+            int selTerm = extras.getInt(MainActivity.TERM_ID);
+            int selectedTerm = getIntent().getExtras().getInt(MainActivity.TERM_ID);
+
+        }
+
+
         setContentView(R.layout.activity_edit_term);
 
         termTitle = (EditText) findViewById(R.id.termTitle);
         termStart = (EditText) findViewById(R.id.termStart);
         termEnd = (EditText) findViewById(R.id.termEnd);
-        super.onCreate(savedInstanceState);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
