@@ -3,132 +3,6 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\ec573d2dfdfca94a2961a85910edddb0e9bd747c\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_447828c6bca96d8cef34754ee65adeabbde306b1\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.2_75a883876a2b3975235ccffb6f772f3668be3e56\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\76d8915e4a7f371cef1a166a22a516229d010773\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="9935891f23923f39d002087085d9696568a9f657">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_35145aa157337f9daec18c47ff5f38fa606934b7\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\111e1ebb4ae6384229be0a40dc3a612819725d01\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c3c3a59813cee9dea605ede314bb8af8163108c4\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\9744333c0b014ee7777911ac095bdd746373a7fd\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_6de4278451e4334d4e7ecdf74b2170ef3cb930fd\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\d33fe9699b4c0377a28a8deb62a86807743fe226\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7ab722571f2303393abc1dc6e1c5448021e55b0b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\0ae9279001afa528245204752adb0982ffe11205\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8b7d8cbe4f0f9e0432e4ebfb4894604942b97e21\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\26.0.0-alpha1\support-annotations-26.0.0-alpha1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="023ee503b631f69511e335a061ea008f8da60f40">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-26.0.0-alpha1_92db4b998426209eaa1a5af740ea707233ca4086\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\f587f11bcbbc95e1ad220d3a066d455870f23ef3\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_092a1277586ecdb7e31450f069c0c0e0a3f39ac1\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\de8d905beeefeb17db07a2135c9c964b72d48aee\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_83a39c243cfc66ef33fdb06488d97373297c1f2e\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\GitRepository\C196Practical\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="aa17d1197ae0732e992a55c980b29e8a1d864f11">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_1d181cf3390d410baf7c15abae032580422d2d20\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\bba89910ec55d5c7a51920baf8867082698f1a79\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1498f611f740f3c0e49b310fb0e8e471a602493f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\dbfa093222324094a2877b0251ff2dac7fce0272\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="952944218ecedea1554a513dec0c14d570642843">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_296802efadf3d9a018fab9d627c4327e8eafaa12\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\2bb3be433f2e9cf80662b050b134eeef5962fb97\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_6405554c6e7fcf4dde7fac5e7db02a7cfd7f1e95\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\GitRepository\C196Practical\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
@@ -138,21 +12,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\c7ab26eeb59ed4027e1ac74f3082a8b915a75095\output\jars\classes.jar"
+        jar="C:\GitRepository\C196Practical\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
-        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_44d10cb5b1ee77b5ec5301d1d5571e11d1663f13\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Joe\.android\build-cache\24a2e9b0a8ee3e23258e1541ac856b1d84f336b3\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
-        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_446b3f0776425de07eb1d6e3c3280ea37743138e\classes.dex" />
+        sha1="c06131ccc8391522d4b67b67bd74bbfce73602b1">
+        <dex dex="C:\GitRepository\C196Practical\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_1d181cf3390d410baf7c15abae032580422d2d20\classes.dex" />
     </item>
 
 </items>

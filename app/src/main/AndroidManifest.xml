@@ -20,10 +20,12 @@
             </intent-filter>
         </activity>
 
-       <!--<provider
+        <!--
+           <provider
             android:name=".DBProvider"
             android:authorities="edu.jlosee.c196practical.dbprovider"
-            android:exported="false" />-->
+            android:exported="false" />
+        -->
 
         <activity
             android:name=".EditTermActivity"
@@ -55,6 +57,15 @@
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessment"
+            android:parentActivityName=".ViewTermActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.jlosee.c196practical.ViewTermActivity" />
+        </activity>
+        <activity
+            android:name=".ViewCourseActivity"
+            android:label="@string/title_activity_view_course"
             android:parentActivityName=".ViewTermActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

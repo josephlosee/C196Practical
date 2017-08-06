@@ -25,7 +25,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TERM_ID = "termID";
-    private ArrayList<Term> terms = new ArrayList<>();
+    //private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
 
@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 intent.putExtra(TERM_ID, test);
                 startActivity(intent);
-
             }
         });
 
@@ -190,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 course.put(DBOpenHelper.COURSE_CODE, courseCode);
                 course.put(DBOpenHelper.TITLE, "Course Title" + courseCode);
                 course.put(DBOpenHelper.COURSE_STATUS, "Started");
+                course.put(DBOpenHelper.COURSE_DESCRIPTION, loremIpsem);
 
                 int notesMaxRandom = (int)(Math.random()*5+1);
 
@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity {
                 int courseID = Integer.parseInt(insertedCourse.getLastPathSegment());
 
                 for (int n = 0; n < notesMaxRandom; n++){
-                    notes.put(DBOpenHelper.START_DATE, "TODO");
-                    notes.put(DBOpenHelper.END_DATE, "TODO");
+                    //notes.put(DBOpenHelper.START_DATE, "TODO");
+                    //notes.put(DBOpenHelper.END_DATE, "TODO");
                     notes.put(DBOpenHelper.TITLE, "Note for Course "+courseID + " Note # "+n);
                     notes.put(DBOpenHelper.NOTE_TEXT, loremIpsem);
                     notes.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);

@@ -35,6 +35,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     //Course Specific Strings
     public static final String COURSE_CODE = "courseCode";
     public static final String COURSE_STATUS = "courseStatus";
+    public static final String COURSE_DESCRIPTION = "courseDescription";
     public static final String MENTOR = "mentor";
 
     //Assessment table specific strings
@@ -57,8 +58,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_COURSE + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     TITLE + " TEXT, " +
+                    COURSE_DESCRIPTION + " TEXT, " +
                     MENTOR + " INTEGER, " +
-                    COURSE_CODE + "TEXT, " +
+                    COURSE_CODE + " TEXT, " +
                     START_DATE + " TEXT, "+
                     END_DATE + " TEXT, "+
                     COURSE_STATUS + " TEXT, " +

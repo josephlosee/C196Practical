@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class EditTermActivity extends AppCompatActivity {
 
-    private Term newOrEditedTerm;
+    //private Term newOrEditedTerm;
 
     EditText termTitle;
     EditText termStart;
@@ -127,8 +127,8 @@ public class EditTermActivity extends AppCompatActivity {
         String start = termStart.getText().toString();
         String end = termEnd.getText().toString();
 
-        if(newOrEditedTerm==null){
-            newOrEditedTerm = new Term(termTitle.getText().toString(), startCalendar, endCalendar);
+/*        if(newOrEditedTerm==null){
+           newOrEditedTerm = new Term(termTitle.getText().toString(), startCalendar, endCalendar);
 
             //TODO: return the term to the activity
             //
@@ -139,7 +139,7 @@ public class EditTermActivity extends AppCompatActivity {
             newOrEditedTerm.setStartDate(startCalendar);
             newOrEditedTerm.setEndDate(endCalendar);
             //return the term to the activity
-        }
+        }*/
     }
 
     void updateStartLabel(){
