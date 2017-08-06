@@ -2,20 +2,28 @@ package edu.jlosee.c196practical;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 
 import java.text.SimpleDateFormat;
@@ -39,9 +47,50 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         dbProvider = new DBProvider(this.getApplicationContext());
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Resources r = getResources();
+
+        int marginPX = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+        //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+        //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+        //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+
+        ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
+        LinearLayout navButtons = new LinearLayout(this);
+
+        LinearLayout.LayoutParams loParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        loParams.setMargins(marginPX, marginPX, marginPX, marginPX);
+        loParams.gravity=Gravity.CENTER_VERTICAL;
+
+
+        navButtons.setOrientation(LinearLayout.VERTICAL);
+        navButtons.setLayoutParams(loParams);
+
+        navButtons.setHorizontalGravity(Gravity.CENTER);
+        navButtons.setGravity(Gravity.CENTER);
+
+        //Setup buttons
+        Button terms = new Button(this);
+        terms.setText("Terms");
+        Button courses = new Button(this);
+        courses.setText("Courses");
+        Button mentors = new Button(this);
+        mentors.setText("Mentors");
+
+        //ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
+
+
+        //Add buttons to the linear layout
+        navButtons.addView(terms);
+        navButtons.addView(courses);
+        navButtons.addView(mentors);
+
+        //Add the layout to the constraint layout
+        maincontent.addView(navButtons);
 
         Cursor test = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
         if (test.moveToFirst()){

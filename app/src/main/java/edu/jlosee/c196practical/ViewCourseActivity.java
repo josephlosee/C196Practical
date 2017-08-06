@@ -48,8 +48,8 @@ public class ViewCourseActivity extends AppCompatActivity {
             }
         }
 
-        toolbar.inflateMenu(R.menu.menu_editsavecancel);
         toolbar.setTitle("Course");
+        toolbar.inflateMenu(R.menu.menu_editsavecancel);
         setSupportActionBar(toolbar);
         //Button editButton = new Button(this);
         //;;editButton.setText("Edit");
