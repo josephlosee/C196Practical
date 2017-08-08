@@ -72,6 +72,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.jlosee.c196practical.ViewTermActivity" />
         </activity>
+        <activity
+            android:name=".ViewMentors"
+            android:label="@string/title_activity_view_mentors"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

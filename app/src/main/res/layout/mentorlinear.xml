@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listViewCustomLinear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/mentorName"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="10sp"
+        android:visibility="visible"
+        tools:text="Example Name Here" />
+
+    <TextView
+        android:id="@+id/mentorPhone"
+        android:layout_width="81dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="10sp"
+        tools:text="(555) 555-5555" />
+
+    <TextView
+        android:id="@+id/mentorEmail"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_weight="1.39"
+        android:gravity="center"
+        android:textSize="10sp"
+        tools:text="aregularlengthemail@gmail.com" />
+
+    <CheckBox
+        android:id="@+id/mentorAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center" />
+
+</LinearLayout>

@@ -105,6 +105,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             MENTOR_NAME + " TEXT, " + EMAIL + " TEXT, " + PHONE + " TEXT)";
 
+    private static final String TABLE_COURSE_MENTORS = "CourseMentors";
+    private static final String COURSE_MENTORS_CREATE = "CREATE TABLE " + TABLE_COURSE_MENTORS + " ("+
+            TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            TABLE_ID+TABLE_COURSE + " INTEGER, " +
+            TABLE_ID+TABLE_MENTOR + " INTEGER, " +
+            "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " + TABLE_COURSE + " (" + TABLE_ID+ "), " +
+            "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " + TABLE_MENTOR + " (" + TABLE_ID+ "))";
     public static final String[] ALL_TERM_COLS =
             {TABLE_ID, TITLE, START_DATE, END_DATE};
 
@@ -120,6 +127,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(NOTES_IMAGES_CREATE);
         sqLiteDatabase.execSQL(ASSESSMENT_CREATE);
         sqLiteDatabase.execSQL(MENTOR_CREATE);
+        sqLiteDatabase.execSQL(COURSE_MENTORS_CREATE);
     }
 
     @Override
@@ -130,13 +138,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTE_IMAGE + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENT + ";");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSE_MENTORS + ";");
         this.onCreate(sqLiteDatabase);
     }
-
-    //Debug Function
-    public void fillWithTestData(SQLiteDatabase sqLiteDatabase){
-        this.onUpgrade(sqLiteDatabase, 1, 1);
-
-        //String term = "INSERT INTO "
-    }
-}
+}//END OF CLASS

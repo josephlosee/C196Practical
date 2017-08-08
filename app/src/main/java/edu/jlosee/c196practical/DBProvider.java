@@ -89,6 +89,9 @@ public class DBProvider{//} extends ContentProvider {
             case NOTES_IMG:
                 ret = database.query(DBOpenHelper.TABLE_NOTE_IMAGE, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
+            case MENTOR:
+                ret = database.query(DBOpenHelper.TABLE_MENTOR, columns, selection, selectionArgs, null, null, DBOpenHelper.MENTOR_NAME+" ASC");
+                break;
             default:
                 Log.d("DBProvider", "No match found for URI: "+uri.toString());
                 break;
@@ -122,6 +125,9 @@ public class DBProvider{//} extends ContentProvider {
                 break;
             case NOTES_IMG:
                 id = database.insert(DBOpenHelper.TABLE_NOTE_IMAGE, null, contentValues);
+                break;
+            case MENTOR:
+                id = database.insert(DBOpenHelper.TABLE_MENTOR, null, contentValues);
                 break;
             default:
                 Log.d("DBProvider", "No match found for URI: "+uri.toString());

@@ -80,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         courses.setText("Courses");
         Button mentors = new Button(this);
         mentors.setText("Mentors");
+        mentors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mentorIntent = new Intent(getApplicationContext(), ViewMentors.class);
+                startActivity(mentorIntent);
+            }
+        });
 
         //ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
 
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 6);
         String endDate = simpleDateFormat.format(cal.getTime());
-        Log.d("MainActivity", "Created end date: "+ endDate);
+        Log.d("MainActivity", "Createdd end date: "+ endDate);
         //values.put(DBOpenHelper.START_DATE, startDate);
         //values.put(DBOpenHelper.END_DATE, endDate);
         //Uri termUri = dbProvider.insert(DBProvider.TERM_URI, values);
@@ -141,9 +148,10 @@ public class MainActivity extends AppCompatActivity {
         termListView = (ListView)findViewById(R.id.termList);
 
         final Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
-        String[] from = {DBOpenHelper.TITLE};
-        int[] to = {android.R.id.text1};
-        CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
+        String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
+        int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
+        //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
+        CursorAdapter cursAdaptor = new TermCursorAdapter(this, cursor);
         termListView.setAdapter(cursAdaptor);
 
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -191,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
-        //noinspection SimplifiableIfStatement
+        /*noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Snackbar.make(this.getCurrentFocus(), "Action Settings Selection", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else if (id==4){
             Snackbar.make(this.getCurrentFocus(), "test was selected", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -211,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         ContentValues mentor  = new ContentValues();
         ContentValues notes = new ContentValues();
         ContentValues assessment = new ContentValues();
-
+        ContentValues courseMentors = new ContentValues();
         String loremIpsem = getResources().getString(R.string.lorem_ipsem);
 
         Calendar initial = Calendar.getInstance();
@@ -275,9 +283,40 @@ public class MainActivity extends AppCompatActivity {
                      */
                 }
             }
+
+            //mentor.clear();
+
             //
-            setTermListView();
+
         }
+
+        //mentor.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, "Jane Doe")
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Jane Doe");
+        mentor.put(DBOpenHelper.PHONE, "555-555-5555");
+        mentor.put(DBOpenHelper.EMAIL, "JaneDoe@wgu.edu");
+        provider.insert(DBProvider.MENTOR_URI, mentor);
+        mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "John Doe");
+        mentor.put(DBOpenHelper.PHONE, "555-555-6666");
+        mentor.put(DBOpenHelper.EMAIL, "JohnDoe@wgu.edu");
+        provider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Alan Smithee");
+        mentor.put(DBOpenHelper.PHONE, "555-555-7777");
+        mentor.put(DBOpenHelper.EMAIL, "AlanSmithee@wgu.edu");
+        provider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Agrajag Blartfast");
+        mentor.put(DBOpenHelper.PHONE, "555-555-8888");
+        mentor.put(DBOpenHelper.EMAIL, "AgrajagBlartfast@magrathea.com");
+        provider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Esme WeatherWax");
+        mentor.put(DBOpenHelper.PHONE, "555-555-9999");
+        mentor.put(DBOpenHelper.EMAIL, "EsmeWeatherWax@ramtops.edu");
+        provider.insert(DBProvider.MENTOR_URI, mentor);
+        
+        setTermListView();
     }
 
 }
