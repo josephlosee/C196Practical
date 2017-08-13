@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/termEditTitle"
-        android:layout_width="match_parent"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
@@ -70,4 +70,27 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/termStart"
         tools:layout_constraintTop_creator="1" />
+
+    <Button
+        android:id="@+id/startDateButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:drawable/ic_menu_today"
+        app:layout_constraintLeft_toRightOf="@+id/termStart"
+        app:layout_constraintTop_toTopOf="@+id/termStart" />
+
+    <Button
+        android:id="@+id/endDateButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:background="@android:drawable/ic_menu_today"
+        app:layout_constraintLeft_toRightOf="@+id/termEnd"
+        app:layout_constraintTop_toTopOf="@+id/termEnd" />
+
 </android.support.constraint.ConstraintLayout>

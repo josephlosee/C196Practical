@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
         ContentValues courseMentors = new ContentValues();
         String loremIpsem = getResources().getString(R.string.lorem_ipsem);
 
+        addPlaceholderMentors();
+
         Calendar initial = Calendar.getInstance();
         //Fill in terms
         for (int t = 0; t <=5; t++){
@@ -270,6 +272,11 @@ public class MainActivity extends AppCompatActivity {
 
                     provider.insert(DBProvider.ASSESSMENT_URI, assessment);
 
+                    courseMentors.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
+                    courseMentors.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR, n);
+
+                    provider.insert(DBProvider.COURSE_MENTORS_URI, courseMentors);
+
                     /*
                         private static final String ASSESSMENT_CREATE =
             "CREATE TABLE " + TABLE_ASSESSMENT + " (" +
@@ -290,33 +297,44 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        //mentor.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, "Jane Doe")
-        mentor.put(DBOpenHelper.MENTOR_NAME, "Jane Doe");
-        mentor.put(DBOpenHelper.PHONE, "555-555-5555");
-        mentor.put(DBOpenHelper.EMAIL, "JaneDoe@wgu.edu");
-        provider.insert(DBProvider.MENTOR_URI, mentor);
-        mentor.clear();
-        mentor.put(DBOpenHelper.MENTOR_NAME, "John Doe");
-        mentor.put(DBOpenHelper.PHONE, "555-555-6666");
-        mentor.put(DBOpenHelper.EMAIL, "JohnDoe@wgu.edu");
-        provider.insert(DBProvider.MENTOR_URI, mentor);
-        //mentor.clear();
-        mentor.put(DBOpenHelper.MENTOR_NAME, "Alan Smithee");
-        mentor.put(DBOpenHelper.PHONE, "555-555-7777");
-        mentor.put(DBOpenHelper.EMAIL, "AlanSmithee@wgu.edu");
-        provider.insert(DBProvider.MENTOR_URI, mentor);
-        //mentor.clear();
-        mentor.put(DBOpenHelper.MENTOR_NAME, "Agrajag Blartfast");
-        mentor.put(DBOpenHelper.PHONE, "555-555-8888");
-        mentor.put(DBOpenHelper.EMAIL, "AgrajagBlartfast@magrathea.com");
-        provider.insert(DBProvider.MENTOR_URI, mentor);
-        //mentor.clear();
-        mentor.put(DBOpenHelper.MENTOR_NAME, "Esme WeatherWax");
-        mentor.put(DBOpenHelper.PHONE, "555-555-9999");
-        mentor.put(DBOpenHelper.EMAIL, "EsmeWeatherWax@ramtops.edu");
-        provider.insert(DBProvider.MENTOR_URI, mentor);
+
         
         setTermListView();
     }
 
+    /**
+     * Adds several mentors to the database
+     *
+     */
+    private void addPlaceholderMentors(){
+        ContentValues mentor = new ContentValues();
+
+        //mentor.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, "Jane Doe")
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Jane Doe");
+        mentor.put(DBOpenHelper.PHONE, "555-555-5555");
+        mentor.put(DBOpenHelper.EMAIL, "JaneDoe@wgu.edu");
+        dbProvider.insert(DBProvider.MENTOR_URI, mentor);
+        mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "John Doe");
+        mentor.put(DBOpenHelper.PHONE, "555-555-6666");
+        mentor.put(DBOpenHelper.EMAIL, "JohnDoe@wgu.edu");
+        dbProvider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Alan Smithee");
+        mentor.put(DBOpenHelper.PHONE, "555-555-7777");
+        mentor.put(DBOpenHelper.EMAIL, "AlanSmithee@wgu.edu");
+        dbProvider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Agrajag Blartfast");
+        mentor.put(DBOpenHelper.PHONE, "555-555-8888");
+        mentor.put(DBOpenHelper.EMAIL, "AgrajagBlartfast@magrathea.com");
+        dbProvider.insert(DBProvider.MENTOR_URI, mentor);
+        //mentor.clear();
+        mentor.put(DBOpenHelper.MENTOR_NAME, "Esme WeatherWax");
+        mentor.put(DBOpenHelper.PHONE, "555-555-9999");
+        mentor.put(DBOpenHelper.EMAIL, "EsmeWeatherWax@ramtops.edu");
+        dbProvider.insert(DBProvider.MENTOR_URI, mentor);
+    }
 }
+
+

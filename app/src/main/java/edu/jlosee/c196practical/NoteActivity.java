@@ -17,8 +17,6 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,7 +25,15 @@ public class NoteActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Bundle note = getIntent().getExtras();
+
+        if (note!= null){
+            note.getInt(ViewCourseActivity.NOTE_ID);
+
+        }
     }
 
 }

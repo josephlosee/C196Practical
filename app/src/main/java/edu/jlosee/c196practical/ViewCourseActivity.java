@@ -9,9 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class ViewCourseActivity extends AppCompatActivity {
+
+    public static final String NOTE_ID = "noteID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,13 @@ public class ViewCourseActivity extends AppCompatActivity {
                 etDesc.setText(courseDescription);
                 etDesc.setEnabled(false);
             }
+            String[]joinArgs = {String.valueOf(courseID)};
+            //Cursor mentorsCursor = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, joinArgs);
+            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor;", null);
+            ListView mentorlist = (ListView)findViewById(R.id.mentorList);
+            CursorAdapter mentorAdapter = new MentorCursorAdapter(this, mentorsCursor);
+
+            mentorlist.setAdapter(mentorAdapter);
         }
 
         toolbar.setTitle("Course");

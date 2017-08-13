@@ -13,6 +13,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "course.db";
     private static final int DATABASE_VERSION = 1;
 
+    //public constant for a join:
+    public static final String MENTOR_JOIN_QUERY = "Select * from Mentor join CourseMentors on Mentor._id = CourseMentors._idMentor where CourseMentors._idCourse = ?";
+
     //Constants for identifying table and columns
     public static final String TABLE_NOTES = "CourseNotes";
     public static final String TABLE_COURSE = "Course";
@@ -20,6 +23,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_NOTE_IMAGE = "Course_Image";
     public static final String TABLE_TERM = "Term";
     public static final String TABLE_MENTOR = "Mentor";
+    public static final String TABLE_COURSE_MENTORS = "CourseMentors";
 
     //Note Specific Strings
     public static final String NOTE_TEXT = "noteText";
@@ -105,7 +109,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             MENTOR_NAME + " TEXT, " + EMAIL + " TEXT, " + PHONE + " TEXT)";
 
-    private static final String TABLE_COURSE_MENTORS = "CourseMentors";
+
     private static final String COURSE_MENTORS_CREATE = "CREATE TABLE " + TABLE_COURSE_MENTORS + " ("+
             TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             TABLE_ID+TABLE_COURSE + " INTEGER, " +

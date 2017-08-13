@@ -28,12 +28,17 @@ public class ViewMentors extends AppCompatActivity {
         if (courseBundle!=null){
             //TODO: QUERY THE COURSE MENTOR TABLE for Mentor IDs
             //TODO: Then Query MENTOR TABLE for mentor info, then populate the ListView
+
+            String[] selectionArgs = {String.valueOf(courseBundle.getInt(ViewTermActivity.COURSE_ID))};
+            Cursor mentorForCourse = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, selectionArgs);
+            CursorAdapter adapter = new MentorCursorAdapter(this, mentorForCourse);
+            mentorListView.setAdapter(adapter);
+
         }else{
             //If a courseID was not passed (-1 flag value)
             Cursor mentorCursor = MainActivity.dbProvider.query(DBProvider.MENTOR_URI, null, null, null, "ORDER BY "+DBOpenHelper.MENTOR_NAME);
             CursorAdapter adapter = new MentorCursorAdapter(this, mentorCursor);
             mentorListView.setAdapter(adapter);
-
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
