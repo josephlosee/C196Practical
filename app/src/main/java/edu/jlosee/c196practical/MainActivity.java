@@ -17,17 +17,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,30 +62,46 @@ public class MainActivity extends AppCompatActivity {
         loParams.setMargins(marginPX, marginPX, marginPX, marginPX);
         loParams.gravity=Gravity.CENTER_VERTICAL;
 
-
         navButtons.setOrientation(LinearLayout.VERTICAL);
         navButtons.setLayoutParams(loParams);
 
         navButtons.setHorizontalGravity(Gravity.CENTER);
         navButtons.setGravity(Gravity.CENTER);
 
+        navButtons.setVerticalGravity(Gravity.CENTER);
+
         //Setup buttons
         Button terms = new Button(this);
         terms.setText("Terms");
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent termsIntent = new Intent(MainActivity.this, TermListActivity.class);
+                startActivity(termsIntent);
+            }
+        });
+
         Button courses = new Button(this);
         courses.setText("Courses");
+        courses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent courseIntent = new Intent(MainActivity.this, TermDetailsActivity.class);
+                startActivity(courseIntent);
+            }
+        });
+
         Button mentors = new Button(this);
         mentors.setText("Mentors");
         mentors.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mentorIntent = new Intent(getApplicationContext(), ViewMentors.class);
+                Intent mentorIntent = new Intent(MainActivity.this, ViewMentors.class);
                 startActivity(mentorIntent);
             }
         });
 
         //ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
-
 
         //Add buttons to the linear layout
         navButtons.addView(terms);
@@ -99,41 +111,18 @@ public class MainActivity extends AppCompatActivity {
         //Add the layout to the constraint layout
         maincontent.addView(navButtons);
 
-        Cursor test = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
-        if (test.moveToFirst()){
-            do{
-                Log.d("MainActivity", "ID: " + test.getString(1));
-            }while (test.moveToNext());
-        }
-
-        setTermListView();
-
-        //ContentValues values = new ContentValues();
-        //values.put(DBOpenHelper.TITLE, "Term 3");
+        /* Debug stuff
         simpleDateFormat.setCalendar(Calendar.getInstance());
         String startDate = simpleDateFormat.format(Calendar.getInstance().getTime());
-        //simpleDateFormat.
-        //Calendar.getInstance().to
         Log.d("MainActivity", "Created start date: "+ startDate);
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 6);
         String endDate = simpleDateFormat.format(cal.getTime());
-        Log.d("MainActivity", "Createdd end date: "+ endDate);
-        //values.put(DBOpenHelper.START_DATE, startDate);
-        //values.put(DBOpenHelper.END_DATE, endDate);
-        //Uri termUri = dbProvider.insert(DBProvider.TERM_URI, values);
-        //Log.d("MainActivity", "Inserted term " + termUri.getLastPathSegment());
+        Log.d("MainActivity", "Created end date: "+ endDate);
+        */
 
-        //termListView.ad
-
-
-        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        final int REQ_IMG_CAP =1;
-        if (takePictureIntent.resolveActivity(getPackageManager())!=null){
-            startActivityForResult(takePictureIntent, REQ_IMG_CAP);
-        }*/
-
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /* TODO Move this to TermListActivity later
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//TODO: Make this a Add Term Button? Share?
@@ -141,13 +130,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }
-        });
+        });*/
     }
 
     public void setTermListView(){
         termListView = (ListView)findViewById(R.id.termList);
 
-        final Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
+        Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
         String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
         int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
         //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
@@ -156,18 +145,12 @@ public class MainActivity extends AppCompatActivity {
 
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(MainActivity.this, ViewTermActivity.class);
-                int test = -1;
-                if (cursor.moveToPosition(position)){
-                    test = cursor.getInt(cursor.getColumnIndex("_id"));
-                    Snackbar.make(view, ""+test, Snackbar.LENGTH_LONG).show();
-                }
-                intent.putExtra(TERM_ID, test);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, TermDetailsActivity.class);
+                intent.putExtra(TERM_ID, id);
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -199,15 +182,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
-        /*noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Snackbar.make(this.getCurrentFocus(), "Action Settings Selection", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        } else if (id==4){
-            Snackbar.make(this.getCurrentFocus(), "test was selected", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -216,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
         ContentValues term = new ContentValues();
         ContentValues course = new ContentValues();
-        ContentValues mentor  = new ContentValues();
         ContentValues notes = new ContentValues();
         ContentValues assessment = new ContentValues();
         ContentValues courseMentors = new ContentValues();

@@ -16,7 +16,8 @@ import android.widget.TextView;
 public class TermCursorAdapter extends CursorAdapter {
 
     public TermCursorAdapter(Context context, Cursor cursor){
-        super(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //super(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        super(context, cursor, 0);
     }
 
     @Override

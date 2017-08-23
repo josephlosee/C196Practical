@@ -13,11 +13,11 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class ViewTermActivity extends AppCompatActivity {
+public class TermDetailsActivity extends AppCompatActivity {
 
     ListView courseList;
     public static final String COURSE_ID = "courseID";
-    private static int termID = -1;
+    private static long termID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +42,18 @@ public class ViewTermActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    //TODO: Migrate to cursor loader in all relevant activities
+    //TODO: migrate to using long id instead of getting ID from cursor (so it is no longer final)
     private void setCourseListView(){
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
-                termID = extras.getInt(MainActivity.TERM_ID);
+                termID = extras.getLong(MainActivity.TERM_ID);
         }
         String[] columns = {DBOpenHelper.TABLE_ID, DBOpenHelper.TITLE};
         String selection = DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_TERM + "=?";
         String[] selectionArgs = {String.valueOf(termID)};
 
-        final Cursor termCourses = MainActivity.dbProvider.query(DBProvider.COURSE_URI, columns, selection, selectionArgs, null);
+        Cursor termCourses = MainActivity.dbProvider.query(DBProvider.COURSE_URI, columns, selection, selectionArgs, null);
 
         courseList = (ListView) findViewById(R.id.termViewOfcourses);
 
@@ -63,14 +65,10 @@ public class ViewTermActivity extends AppCompatActivity {
 
         courseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent(ViewTermActivity.this, ViewCourseActivity.class);
-                    int selectedCourse = -1;
-                    if (termCourses.moveToPosition(position)) {
-                        selectedCourse = termCourses.getInt(termCourses.getColumnIndex("_id"));
-                        Snackbar.make(view, "" + selectedCourse, Snackbar.LENGTH_LONG).show();
-                    }
-                    intent.putExtra(COURSE_ID, selectedCourse);
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    Intent intent = new Intent(TermDetailsActivity.this, ViewCourseActivity.class);
+
+                    intent.putExtra(COURSE_ID, id);
                     startActivity(intent);
                 }
             });

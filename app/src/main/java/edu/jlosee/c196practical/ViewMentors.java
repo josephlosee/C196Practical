@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 
-import java.util.List;
-
 public class ViewMentors extends AppCompatActivity {
     private int courseId = -1;
     @Override
@@ -29,7 +27,7 @@ public class ViewMentors extends AppCompatActivity {
             //TODO: QUERY THE COURSE MENTOR TABLE for Mentor IDs
             //TODO: Then Query MENTOR TABLE for mentor info, then populate the ListView
 
-            String[] selectionArgs = {String.valueOf(courseBundle.getInt(ViewTermActivity.COURSE_ID))};
+            String[] selectionArgs = {String.valueOf(courseBundle.getInt(TermDetailsActivity.COURSE_ID))};
             Cursor mentorForCourse = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, selectionArgs);
             CursorAdapter adapter = new MentorCursorAdapter(this, mentorForCourse);
             mentorListView.setAdapter(adapter);

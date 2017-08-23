@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -37,7 +39,7 @@
                 android:value="edu.jlosee.c196practical.MainActivity" />
         </activity>
         <activity
-            android:name=".ViewTermActivity"
+            android:name=".TermDetailsActivity"
             android:label="@string/title_activity_view_term"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -46,35 +48,54 @@
                 android:value="edu.jlosee.c196practical.MainActivity" />
         </activity>
         <activity
-            android:name=".NoteActivity"
+            android:name=".NoteListActivity"
             android:label="@string/title_activity_note"
-            android:parentActivityName=".ViewTermActivity"
+            android:parentActivityName=".TermDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.ViewTermActivity" />
+                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
         </activity>
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessment"
-            android:parentActivityName=".ViewTermActivity"
+            android:parentActivityName=".TermDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.ViewTermActivity" />
+                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
         </activity>
         <activity
             android:name=".ViewCourseActivity"
             android:label="@string/title_activity_view_course"
-            android:parentActivityName=".ViewTermActivity"
+            android:parentActivityName=".TermDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.ViewTermActivity" />
+                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
         </activity>
         <activity
             android:name=".ViewMentors"
             android:label="@string/title_activity_view_mentors"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"
+            />
+        <activity
+            android:name=".DeleteItemsActivity"
+            android:label="@string/title_activity_delete_items"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TermListActivity"
+            android:label="@string/title_activity_term_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.jlosee.c196practical.MainActivity" />
+        </activity>
+        <activity
+            android:name=".NoteDetails"
+            android:label="@string/title_activity_note_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

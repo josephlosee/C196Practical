@@ -86,13 +86,13 @@ public class DBProvider{//} extends ContentProvider {
                 //ret = database.query(DBOpenHelper.TABLE_COURSE, null, null, null, null, null, DBOpenHelper.START_DATE+" ASC");
                 break;
             case ASSESSMENT:
-                ret = database.query(DBOpenHelper.TABLE_ASSESSMENT, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
+                ret = database.query(DBOpenHelper.TABLE_ASSESSMENT, columns, selection, selectionArgs, null, null, DBOpenHelper.ASSESSMENT_DUE_DATE+" DESC");
                 break;
             case NOTES:
-                ret = database.query(DBOpenHelper.TABLE_NOTES, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
+                ret = database.query(DBOpenHelper.TABLE_NOTES, columns, selection, selectionArgs, null, null, DBOpenHelper.TITLE+" ASC");
                 break;
             case NOTES_IMG:
-                ret = database.query(DBOpenHelper.TABLE_NOTE_IMAGE, columns, selection, selectionArgs, null, null, DBOpenHelper.START_DATE+" ASC");
+                ret = database.query(DBOpenHelper.TABLE_NOTE_IMAGE, columns, selection, selectionArgs, null, null, null);
                 break;
             case MENTOR:
                 ret = database.query(DBOpenHelper.TABLE_MENTOR, columns, selection, selectionArgs, null, null, DBOpenHelper.MENTOR_NAME+" ASC");

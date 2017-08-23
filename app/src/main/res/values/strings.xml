@@ -105,4 +105,7 @@ Mauris mauris sapien, luctus a porttitor quis, rutrum ut lacus. Donec eget leo s
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_delete_items">DeleteItemsActivity</string>
+    <string name="title_activity_term_list">TermListActivity</string>
+    <string name="title_activity_note_details">NoteDetails</string>
 </resources>
