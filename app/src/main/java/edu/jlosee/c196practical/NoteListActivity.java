@@ -36,12 +36,9 @@ public class NoteListActivity extends AppCompatActivity {
 
         noteList = (ListView)findViewById(R.id.noteList);
 
-        if (noteExtras!= null){
 
-            //TODO: Should add URI and Foreign Key identifier to the extras use the
-            // TODO:foreign key and the related table to get note information
-            //TODO: set the list of items with note title
-            //TODO: set the list onClick to open the note
+        if (noteExtras!= null){ //quick null check
+            //Fill in all the fun stuff
             final long courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
             String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
             String[] whereArgs = {String.valueOf(courseID)};

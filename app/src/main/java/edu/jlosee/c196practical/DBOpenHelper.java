@@ -28,7 +28,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     //Note Specific Strings
     public static final String NOTE_TEXT = "noteText";
     public static final String NOTE_CREATED = "noteCreated";
-    public static final String NOTE_IMAGE = "noteImage";
+    public static final String NOTE_IMAGE_URI = "noteImageURI";
     //Generic Strings for construction of columnNames
     public static final String TABLE_ID = "_id";
     public static final String TITLE = "title";
@@ -80,13 +80,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     NOTE_TEXT + " TEXT, " +
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP," +
                     TABLE_ID+TABLE_COURSE + " INTEGER, " +
+                    "FOREIGN KEY (" + TABLE_ID+TABLE_ASSESSMENT + ") REFERENCES " +TABLE_ASSESSMENT + " ("+TABLE_ID+ "), " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
 
     //Note Complete
     private static final String NOTES_IMAGES_CREATE =
             "CREATE TABLE " + TABLE_NOTE_IMAGE + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    NOTE_IMAGE+ " BLOB, " +
+                    NOTE_IMAGE_URI+ " TEXT, " +
                     TABLE_ID+TABLE_NOTES + " INTEGER, " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_NOTES + ") REFERENCES " +TABLE_NOTES + " ("+TABLE_ID+ "))";
 
@@ -119,6 +120,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String[] ALL_TERM_COLS =
             {TABLE_ID, TITLE, START_DATE, END_DATE};
 
+
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -127,9 +129,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TERM_CREATE);
         sqLiteDatabase.execSQL(COURSE_CREATE);
+        sqLiteDatabase.execSQL(ASSESSMENT_CREATE);
         sqLiteDatabase.execSQL(NOTES_CREATE);
         sqLiteDatabase.execSQL(NOTES_IMAGES_CREATE);
-        sqLiteDatabase.execSQL(ASSESSMENT_CREATE);
         sqLiteDatabase.execSQL(MENTOR_CREATE);
         sqLiteDatabase.execSQL(COURSE_MENTORS_CREATE);
     }
@@ -138,10 +140,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_TERM + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSE + ";");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENT + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_MENTOR + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTE_IMAGE + ";");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENT + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSE_MENTORS + ";");
         this.onCreate(sqLiteDatabase);
     }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -52,11 +54,24 @@ public class ImageAdapter extends BaseAdapter {
             return imageView;
          */
         //TODO: Make this work:
+        ImageView retImageView = new ImageView(context);
         NoteImage image = imageList.get(i);
         // File imageFile = new File(image.imgUri);
-        Bitmap bmp = new Bitmap();
-        ImageView retImageView = new ImageView(context);
-        retImageView.setImageBitmap();
+        Bitmap bitmap;
+
+        try
+        {
+            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver() , Uri.parse(image.imgUri.toString()));
+
+            retImageView.setImageBitmap(bitmap);
+        }
+        catch (Exception e)
+        {
+            //handle exception
+            Log.d("ImageAdapter", "Exception when attempting to load image URI: "+image.imgUri.toString());
+        }
+
+        return retImageView;
     }
 
     /**
@@ -69,6 +84,11 @@ public class ImageAdapter extends BaseAdapter {
                 //TODO: get each image URI and id from the NOTES_IMAGE table
                 //create a new NoteImage object
                 //Add the new NoteImage to the ArrayList
+                //TODO: Is there a faster way of doing this without bouncing between string and URI?
+                String imgURI = imageCursor.getString(imageCursor.getColumnIndex(DBOpenHelper.NOTE_IMAGE_URI));
+                int imgId = imageCursor.getInt(imageCursor.getColumnIndex(DBOpenHelper.TABLE_ID));
+                NoteImage img = new NoteImage(Uri.parse(imgURI), imgId);
+                imageList.add(img);
             }
         }
     }

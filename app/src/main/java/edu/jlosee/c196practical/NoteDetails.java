@@ -4,12 +4,16 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +21,11 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NoteDetails extends AppCompatActivity {
 
@@ -28,7 +36,8 @@ public class NoteDetails extends AppCompatActivity {
     private long noteID = -1; //Flag value
     ArrayList<ImageView> listOfNoteImages;
     private EditText etContent;
-    private long courseID;
+    private long parentID;
+    private GridView imageGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +46,13 @@ public class NoteDetails extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        imageGrid = (GridView) findViewById(R.id.noteImages);
+
         Bundle noteExtras = getIntent().getExtras();
+
+
         if (noteExtras != null){
-            courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
+            parentID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
             noteID = noteExtras.getLong(ViewCourseActivity.NOTE_ID);
 
             etTitle = (EditText)findViewById(R.id.etNoteTitle);
@@ -48,6 +61,14 @@ public class NoteDetails extends AppCompatActivity {
             String where = DBOpenHelper.TABLE_ID+"=?";
             String[] whereArgs = {String.valueOf(noteID)};
 
+            //TODO: Add handling for if course note or assessment note:
+            boolean isCourse = noteExtras.getBoolean("isCourseNote");
+            if (isCourse){
+                //Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+            }
+            else{
+                Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+            }
             Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
 
             if(note.moveToFirst()) {
@@ -55,19 +76,38 @@ public class NoteDetails extends AppCompatActivity {
                 etContent.setText(note.getString(note.getColumnIndex(DBOpenHelper.NOTE_TEXT)));
             }
 
-            //TODO: get note images
+            //This code should get a cursor of all the images associated with this note,
+            //Set it to an image adapter,
+            //Then set it the gridview and display all the related images.
+            //KEY WORD: SHOULD. Todo: test this.
             String imgWhere = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES+"=?";
-            //TODO: IMPLEMENT to get URIs:
-            // Cursor images = MainActivity.dbProvider.query(DBProvider.NOTE_IMAGE_URI, null, imgWhere, whereArgs, null);
-        }
+            Cursor imagesCursor = MainActivity.dbProvider.query(null, null, imgWhere, whereArgs, null);
+            ImageAdapter noteImagesAdapter = new ImageAdapter(this);
+            noteImagesAdapter.setCursor(imagesCursor);
+            imageGrid.setAdapter(noteImagesAdapter);
+        }//END OF SETUP IF A courseID or assessmentID was passed
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        //Camera button in lower right to take a picture of notes or whatever
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                    File imageFile = null;
+                    try{
+                        imageFile = createImageFile();
+                    }catch(IOException e){
+                        Log.d("NoteDetails","Exception when attempting to create picture file");
+                    }
+
+                    if (imageFile!=null){
+                        Uri photoURI = FileProvider.getUriForFile(NoteDetails.this, "edu.jlosee.fileprovider", imageFile);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                    }
+
 
                 }
             }
@@ -84,14 +124,44 @@ public class NoteDetails extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
             GridView imageGrid = (GridView)findViewById(R.id.noteImages);
-            //imageGrid.
 
-            //TODO: Save the image tot he external public gallery
-            //Then save the URI to the notes img table
-            //Todo: change notes img table to take a string as the uri instead of a blob to satisfy requirement
-            //TODO: write image adapter. Need an arraylist for the imageviews, can pass it in in the onCreate method
+            //TODO: Does this work?
+            //Uri photoUri = (Uri) extras.get(MediaStore.EXTRA_OUTPUT);
+
+            //Send the image to the gallery
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File f = new File(mCurrentPhotoPath);
+            Uri contentUri = Uri.fromFile(f);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+
+            //Save the information to the database:
+            ContentValues noteImageValues = new ContentValues();
+            noteImageValues.put(DBOpenHelper.NOTE_IMAGE_URI, contentUri.toString());
+            MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, noteImageValues);
+
+            //And we're done handling the image... I think //TODO: are we done handling the image?
         }
+    }
 
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        Log.d("NoteDetails", "Image created at pate: " + mCurrentPhotoPath);
+        //TODO:
+        return image;
     }
 
     @Override
@@ -126,7 +196,7 @@ public class NoteDetails extends AppCompatActivity {
 
         noteInfo.put(DBOpenHelper.TITLE, etTitle.getText().toString());
         noteInfo.put(DBOpenHelper.NOTE_TEXT, etContent.getText().toString());
-        noteInfo.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
+        noteInfo.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, parentID);
 
         if (noteID==-1){
 

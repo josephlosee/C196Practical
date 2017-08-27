@@ -43,8 +43,11 @@ public class DBProvider{//} extends ContentProvider {
     private static final int MENTOR_ID = 6;
     private static final int COURSE_MENTORS = 7;
     private static final int COURSE_MENTORS_ID = 7;
+    //private static final int ASSESSMENT_NOTES = 8; //unused, made as a separate foreign key for the column of notes
+    //private static final int ASSESSMENT_NOTES_ID = 8;
 
     private static final UriMatcher uriMatcher = new UriMatcher((UriMatcher.NO_MATCH));
+
 
     static {
         uriMatcher.addURI(AUTHORITY, DBOpenHelper.TABLE_NOTES, NOTES);
