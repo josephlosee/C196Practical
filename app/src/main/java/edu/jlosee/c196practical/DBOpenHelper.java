@@ -80,6 +80,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     NOTE_TEXT + " TEXT, " +
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP," +
                     TABLE_ID+TABLE_COURSE + " INTEGER, " +
+                    TABLE_ID+TABLE_ASSESSMENT + " INTEGER, " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_ASSESSMENT + ") REFERENCES " +TABLE_ASSESSMENT + " ("+TABLE_ID+ "), " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
 

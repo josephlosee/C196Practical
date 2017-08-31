@@ -21,7 +21,7 @@ public class AssessmentActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        etDueDate = (EditText) findViewById(R.id.assessmentDueDate)
+        etDueDate = (EditText) findViewById(R.id.assessmentDueDate);
 
         //TODO: set the notes list, this code is in the note list activity class
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -45,11 +45,11 @@ public class AssessmentActivity extends AppCompatActivity {
 
     }
 
-    public void saveAssessment{
+    public void saveAssessment(){
         if (assessmentID == -1){
             //
             ContentValues content = new ContentValues();
-            content.put(DBOpenHelper.ASSESSMENT_DUE_DATE, );
+            content.put(DBOpenHelper.ASSESSMENT_DUE_DATE, etDueDate.getText().toString());
             MainActivity.dbProvider.insert(DBProvider.ASSESSMENT_URI, content);
         }
     }

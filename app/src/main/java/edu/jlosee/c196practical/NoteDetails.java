@@ -80,8 +80,8 @@ public class NoteDetails extends AppCompatActivity {
             //Set it to an image adapter,
             //Then set it the gridview and display all the related images.
             //KEY WORD: SHOULD. Todo: test this.
-            String imgWhere = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES+"=?";
-            Cursor imagesCursor = MainActivity.dbProvider.query(null, null, imgWhere, whereArgs, null);
+            String imgWhere = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
+            Cursor imagesCursor = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, imgWhere, whereArgs, null);
             ImageAdapter noteImagesAdapter = new ImageAdapter(this);
             noteImagesAdapter.setCursor(imagesCursor);
             imageGrid.setAdapter(noteImagesAdapter);
@@ -120,6 +120,7 @@ public class NoteDetails extends AppCompatActivity {
         ImageView imageView = (ImageView)findViewById(R.id.imageView2);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            //TODO: This causes a crash because data is null?
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);

@@ -93,15 +93,18 @@ public class ViewCourseActivity extends AppCompatActivity {
 
 
     public void addMentorClicked(View view) {
-        //TODO: display the mentors list associated with this term, put an extra with add/delete/view flag
+        //TODO: display the mentors list, put an extra with add/delete/view flag
     }
 
     public void removeMentorClicked(View view) {
-        //TODO: display the mentors list associated with this term, put an extra with add/delete/view flag
+        //TODO: display the mentors list associated with this course, put an extra with add/delete/view flag
     }
 
     public void courseAssessmentsClicked(View view) {
-        //TODO: diplays the assessment list activity
+        //TODO: diplays the assessment list activity, right now this
+        Intent assessmentIntent = new Intent(this, AssessmentActivity.class);
+        assessmentIntent.putExtra(TermDetailsActivity.COURSE_ID, this.courseID);
+        startActivity(assessmentIntent);
     }
 
     public void courseNotesClicked(View view) {
