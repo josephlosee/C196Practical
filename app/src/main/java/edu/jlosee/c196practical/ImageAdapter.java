@@ -26,12 +26,12 @@ public class ImageAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return 0;
+        return imageList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return imageList.get(i);
     }
 
     @Override

@@ -19,7 +19,6 @@ import android.widget.ListView;
 import java.util.List;
 
 public class TermListActivity extends AppCompatActivity{
-
     private CursorAdapter cursorAdapter;
     private ListView termListView;
 
@@ -59,8 +58,7 @@ public class TermListActivity extends AppCompatActivity{
         setTermListView();
     }
 
-    /*
-    //NOTE: This doesn't appear to work without a content resolver, which requires 4.4+
+    /*    NOTE: This doesn't appear to work without a content resolver, which requires 4.4+
     @Override
     public Loader onCreateLoader(int i, Bundle bundle) {
         Uri term = DB
@@ -99,8 +97,16 @@ public class TermListActivity extends AppCompatActivity{
                 Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
 
                 intent.putExtra(MainActivity.TERM_ID, id);
+                //intent.putExtra(BOOL_ISCOURSENOTE, true);
+
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        setTermListView();
     }
 } //End of Class

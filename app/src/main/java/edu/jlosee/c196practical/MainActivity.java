@@ -50,25 +50,25 @@ public class MainActivity extends AppCompatActivity {
 
         Resources r = getResources();
 
-        int marginPX = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
+        //int marginPX = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
         //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
         //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
         //float LeftMarginPX = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, r.getDisplayMetrics());
 
         ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
-        LinearLayout navButtons = new LinearLayout(this);
+        LinearLayout navButtons = (LinearLayout)findViewById(R.id.navButtons);
+                //new LinearLayout(this);
 
-        LinearLayout.LayoutParams loParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        /*LinearLayout.LayoutParams loParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         loParams.setMargins(marginPX, marginPX, marginPX, marginPX);
         loParams.gravity=Gravity.CENTER_VERTICAL;
-
         navButtons.setOrientation(LinearLayout.VERTICAL);
         navButtons.setLayoutParams(loParams);
 
         navButtons.setHorizontalGravity(Gravity.CENTER);
         navButtons.setGravity(Gravity.CENTER);
 
-        navButtons.setVerticalGravity(Gravity.CENTER);
+        navButtons.setVerticalGravity(Gravity.CENTER);*/
 
         //Setup buttons
         Button terms = new Button(this);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         navButtons.addView(mentors);
 
         //Add the layout to the constraint layout
-        maincontent.addView(navButtons);
+        //maincontent.addView(navButtons);
 
         /* Debug stuff
         simpleDateFormat.setCalendar(Calendar.getInstance());
@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
+    /*
     public void setTermListView(){
         termListView = (ListView)findViewById(R.id.termList);
 
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -270,9 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-        
-        setTermListView();
+        //setTermListView();
     }
 
     /**

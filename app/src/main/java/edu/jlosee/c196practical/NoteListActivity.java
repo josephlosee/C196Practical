@@ -3,6 +3,7 @@ package edu.jlosee.c196practical;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -39,31 +40,47 @@ public class NoteListActivity extends AppCompatActivity {
 
         if (noteExtras!= null){ //quick null check
             //Fill in all the fun stuff
-            final long courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
-            String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
-            String[] whereArgs = {String.valueOf(courseID)};
-            Cursor notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
-
-            String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
-            int[] to = {android.R.id.text1};
-            CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, notes, from, to, 0);
-
-            noteList.setAdapter(cursAdaptor);
-
-            noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                    Intent selectedItemIntent = new Intent(NoteListActivity.this, NoteDetails.class);
-                    selectedItemIntent.putExtra(NOTE_ID, id);
-                    selectedItemIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
-                    //Todo: flag for assessment notes
-                    startActivity(selectedItemIntent);
-                }
-            });
+            courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
+            //assessmentID = noteExtras.getLong(AssessmentActivity.ASSESSMENT_ID);
+            setNoteList();
         }
 
         //TODO: Add floating acction button to add a note
-
-
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.addNoteFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: create the note intent and
+                Intent newNoteIntent = new Intent(NoteListActivity.this, NoteDetails.class);
+                //newNoteIntent.putExtra(NOTE_ID, id);
+                newNoteIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                //Todo: flag for assessment notes
+                startActivity(newNoteIntent);
+            }
+        });
     }
+
+    private void setNoteList(){
+        String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
+        String[] whereArgs = {String.valueOf(courseID)};
+        Cursor notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+
+        String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
+        int[] to = {android.R.id.text1};
+        CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        noteList.setAdapter(cursAdaptor);
+
+        noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                Intent selectedItemIntent = new Intent(NoteListActivity.this, NoteDetails.class);
+                selectedItemIntent.putExtra(NOTE_ID, id);
+                selectedItemIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                //Todo: flag for assessment notes
+                startActivity(selectedItemIntent);
+            }
+        });
+    }
+
 }//end of class
