@@ -52,11 +52,11 @@ public class ViewCourseActivity extends AppCompatActivity {
                 etDesc = (EditText)findViewById(R.id.etDescription);
 
                 etCode.setText(courseCode);
-                etCode.setEnabled(false);
+                //etCode.setEnabled(false);
                 etTitle.setText(courseTitle);
-                etTitle.setEnabled(false);
+                //etTitle.setEnabled(false);
                 etDesc.setText(courseDescription);
-                etDesc.setEnabled(false);
+                //etDesc.setEnabled(false);
             }
 
             String[]joinArgs = {String.valueOf(courseID)};

@@ -1,14 +1,17 @@
 package edu.jlosee.c196practical;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -19,11 +22,31 @@ import java.util.ArrayList;
  */
 
 public class ImageAdapter extends BaseAdapter {
+
+
     ArrayList<NoteImage> imageList = new ArrayList<>();
+
+    private int imageHeightDP = 48;
+    private int imageWidthDP = 48;
+    private int dpWidthInPx;
+    private int dpHeightInPx;
+
     Context context;
-    public ImageAdapter(Context c){
-        context=c;
+
+    public ImageAdapter(Context c) {
+        context = c;
+        Resources test = c.getResources();
+        float scale = 1;
+        if (test!=null){
+
+            scale = c.getResources().getDisplayMetrics().density;
+        }
+
+
+        dpWidthInPx  = (int) (imageWidthDP * scale);
+        dpHeightInPx = (int) (imageHeightDP * scale);
     }
+
     @Override
     public int getCount() {
         return imageList.size();
@@ -36,77 +59,116 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return imageList.get(i).id;
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        /*
-                    if (view == null) {
-                imageView = new ImageView(context);
-                imageView.setLayoutParams(new GridView.LayoutParams(185, 185));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(5, 5, 5, 5);
-            } else {
-                imageView = (ImageView) convertView;
-            }
-            imageView.setImageResource(imageIDs[position]);
-            return imageView;
-         */
-        //TODO: Make this work:
-        ImageView retImageView = new ImageView(context);
-        NoteImage image = imageList.get(i);
-        // File imageFile = new File(image.imgUri);
-        Bitmap bitmap;
 
-        try
-        {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver() , Uri.parse(image.imgUri.toString()));
+        ImageView imageView;
 
-            retImageView.setImageBitmap(bitmap);
+
+
+        if (view == null) {
+            imageView = new ImageView(context);
+
+            imageView.setLayoutParams(new GridView.LayoutParams(dpWidthInPx, dpHeightInPx));
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(10, 10, 10, 10);
+
+        } else {
+            imageView = (ImageView) view;
+            imageView.setLayoutParams(new GridView.LayoutParams(dpWidthInPx, dpHeightInPx));
+            imageView.setAdjustViewBounds(true);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(10, 10, 10, 10);
         }
-        catch (Exception e)
-        {
+
+        //Get the relevant bitmap
+
+        NoteImage noteImage = imageList.get(i);
+
+        setScaledBitmap(imageView, noteImage.imgUri);
+        //todo: move this back to getView, addin RAM control
+        try {
+     //imageView.setImageBitmap(bitmap);
+        } catch (Exception e) {
             //handle exception
-            Log.d("ImageAdapter", "Exception when attempting to load image URI: "+image.imgUri.toString());
+            Log.d("ImageAdapter", "Exception when attempting to load image URI: " + noteImage.imgUri.toString());
         }
 
-        return retImageView;
+        //imageView.setImageBitmap(imageList.get(i).image);
+
+        return imageView;
     }
 
     /**
      * Populates the arraylist
+     *
      * @param imageCursor
      */
-    public void setCursor(Cursor imageCursor){
-        if (imageCursor!=null){
-            if (imageCursor.moveToFirst()){
-                //TODO: get each image URI and id from the NOTES_IMAGE table
-                //create a new NoteImage object
-                //Add the new NoteImage to the ArrayList
-                //TODO: Is there a faster way of doing this without bouncing between string and URI?
-                String imgURI = imageCursor.getString(imageCursor.getColumnIndex(DBOpenHelper.NOTE_IMAGE_URI));
-                int imgId = imageCursor.getInt(imageCursor.getColumnIndex(DBOpenHelper.TABLE_ID));
-                NoteImage img = new NoteImage(Uri.parse(imgURI), imgId);
-                imageList.add(img);
+    public void setCursor(Cursor imageCursor) {
+        if (imageCursor != null) {
+            if (imageCursor.moveToFirst()) {
+                while (imageCursor.moveToNext()) {
+                    String imgURI = imageCursor.getString(imageCursor.getColumnIndex(DBOpenHelper.NOTE_IMAGE_URI));
+                    long imgId = imageCursor.getInt(imageCursor.getColumnIndex(DBOpenHelper.TABLE_ID));
+                    NoteImage img = new NoteImage(Uri.parse(imgURI), imgId);
+                    imageList.add(img);
+                }
             }
         }
     }
 
     /**
      * Directly sets the array list of images
+     *
      * @param imgList
      */
-    public void setArrayList(ArrayList<NoteImage> imgList){
+    public void setArrayList(ArrayList<NoteImage> imgList) {
         this.imageList = imgList;
     }
 
-    public class NoteImage{
-        Uri imgUri;
-        int id;
-        public NoteImage(Uri imageUri, int _id){
-            imgUri=imageUri;
-            this.id=_id;
-        }
+
+
+    private void setScaledBitmap(ImageView mImageView, Uri imageUri){
+        int targetW = this.dpWidthInPx;//mImageView.getWidth();
+        int targetH = this.dpHeightInPx;//mImageView.getHeight();
+
+        String imagePath = imageUri.getPath();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds =true;
+        BitmapFactory.decodeFile(imagePath,bmOptions);
+
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds =false;
+        bmOptions.inSampleSize =scaleFactor;
+        //bmOptions.inPurgeable =true;
+
+
+        //Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        mImageView.setImageBitmap(bitmap);
     }
+
+    public class NoteImage {
+        Uri imgUri;
+        long id;
+        //Bitmap image;
+
+        public NoteImage(Uri imageUri, long _id) {
+            imgUri = imageUri;
+            this.id = _id;
+
+        }
+    }//end of inner NoteIMage class
 }

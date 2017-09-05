@@ -39,9 +39,9 @@ public class NoteDetails extends AppCompatActivity {
     private boolean isCourseNote;
 
     EditText etTitle;
-
     private long noteID = -1; //Flag value
     ArrayList<ImageView> listOfNoteImages;
+    ImageAdapter noteImagesAdapter;
     private EditText etContent;
     private long parentID;
     private GridView imageGrid;
@@ -92,8 +92,11 @@ public class NoteDetails extends AppCompatActivity {
 
             String imgWhere = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES+"=?";
             Cursor imagesCursor = MainActivity.dbProvider.query(DBProvider.NOTE_IMAGE_URI, null, imgWhere, whereArgs, null);
-            ImageAdapter noteImagesAdapter = new ImageAdapter(this);
+            noteImagesAdapter = new ImageAdapter(this);
             noteImagesAdapter.setCursor(imagesCursor);
+            //Logging yay
+            Log.d("NoteDetails", "ImageAdapter created for "+ DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES + " length: "+ noteImagesAdapter.getCount());
+
             imageGrid.setAdapter(noteImagesAdapter);
         }//END OF SETUP IF A courseID or assessmentID was passed
 
@@ -125,27 +128,26 @@ public class NoteDetails extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView);
-        ImageView imageView = (ImageView)findViewById(R.id.imageView2);
+        //ImageView imageView = (ImageView)findViewById(R.id.imageView2);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             //TODO: This causes a crash because data is null?
-            Bundle extras = data.getExtras();
+            /*Bundle extras = data.getExtras();
             if (extras!=null){
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(imageBitmap);
+                //imageView.setImageBitmap(imageBitmap);
                 GridView imageGrid = (GridView)findViewById(R.id.noteImages);
                 Uri photoUri = (Uri) extras.get(MediaStore.EXTRA_OUTPUT);
             }
             else{
-                File image = new File(mCurrentPhotoPath);
+                /*File image = new File(mCurrentPhotoPath);
                 Uri imageUri = Uri.fromFile(image);
                 ContentValues content = new ContentValues();
                 content.put(DBOpenHelper.NOTE_IMAGE_URI, imageUri.toString());
-                content.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES, noteID);
 
                 //For new notes, this id will be updated when the note is saved.
-                MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, content);
-            }
+                MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, content);*/
+            //}*/
 
             //TODO: Does this work?
 
@@ -158,10 +160,9 @@ public class NoteDetails extends AppCompatActivity {
 
             //Save the information to the database:
             ContentValues noteImageValues = new ContentValues();
+            noteImageValues.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES, noteID);
             noteImageValues.put(DBOpenHelper.NOTE_IMAGE_URI, contentUri.toString());
             MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, noteImageValues);
-
-            //And we're done handling the image... I think //TODO: are we done handling the image?
         }
     }
 
@@ -188,6 +189,7 @@ public class NoteDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         saveNote();
+        //noteImagesAdapter.imageList.clear(); //Do i need this?
         finish();
     }
 
@@ -197,6 +199,7 @@ public class NoteDetails extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 saveNote();
+                //noteImagesAdapter.imageList.clear(); //Do i need this?
                 this.finish();
                 break;
             case R.id.action_delete:
@@ -237,6 +240,7 @@ public class NoteDetails extends AppCompatActivity {
             //test./
 
         }else{
+            noteInfo.put(DBOpenHelper.TABLE_ID, noteID);
             String where = DBOpenHelper.TABLE_ID+"=?";
             String[] whereArgs = {String.valueOf(noteID)};
             MainActivity.dbProvider.update(DBProvider.NOTES_URI, noteInfo, where, whereArgs);

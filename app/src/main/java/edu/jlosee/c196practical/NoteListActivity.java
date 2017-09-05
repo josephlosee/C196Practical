@@ -77,7 +77,7 @@ public class NoteListActivity extends AppCompatActivity {
                 Intent selectedItemIntent = new Intent(NoteListActivity.this, NoteDetails.class);
                 selectedItemIntent.putExtra(NOTE_ID, id);
                 selectedItemIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
-                //Todo: flag for assessment notes
+                selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
                 startActivity(selectedItemIntent);
             }
         });
