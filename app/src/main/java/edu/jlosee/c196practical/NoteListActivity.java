@@ -19,7 +19,9 @@ public class NoteListActivity extends AppCompatActivity {
     private long courseID = -1;
     private long assessmentID = -1;
 
-    ListView noteList;
+    private Cursor notes;
+    private CursorAdapter cursorAdapter;
+    private ListView noteList;
 
     //TODO: add assessment foreign key to the Note table
     //TODO: will checking for a nonexistent key crash the program?
@@ -37,7 +39,6 @@ public class NoteListActivity extends AppCompatActivity {
 
         noteList = (ListView)findViewById(R.id.noteList);
 
-
         if (noteExtras!= null){ //quick null check
             //Fill in all the fun stuff
             courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
@@ -52,8 +53,9 @@ public class NoteListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO: create the note intent and
                 Intent newNoteIntent = new Intent(NoteListActivity.this, NoteDetails.class);
-                //newNoteIntent.putExtra(NOTE_ID, id);
+                newNoteIntent.putExtra(ViewCourseActivity.NOTE_ID, (long)-1); //flag value
                 newNoteIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                newNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
                 //Todo: flag for assessment notes
                 startActivity(newNoteIntent);
             }
@@ -63,13 +65,15 @@ public class NoteListActivity extends AppCompatActivity {
     private void setNoteList(){
         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
         String[] whereArgs = {String.valueOf(courseID)};
-        Cursor notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+
+        notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
 
         String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
         int[] to = {android.R.id.text1};
-        CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
-        noteList.setAdapter(cursAdaptor);
+        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        noteList.setAdapter(cursorAdapter);
 
         noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,4 +87,17 @@ public class NoteListActivity extends AppCompatActivity {
         });
     }
 
+    private void refreshCursorAdapter(){
+        String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
+        String[] whereArgs = {String.valueOf(courseID)};
+        notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+        cursorAdapter.changeCursor(notes);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        refreshCursorAdapter();
+    }
 }//end of class

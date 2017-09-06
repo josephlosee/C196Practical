@@ -42,7 +42,6 @@ public class ImageAdapter extends BaseAdapter {
             scale = c.getResources().getDisplayMetrics().density;
         }
 
-
         dpWidthInPx  = (int) (imageWidthDP * scale);
         dpHeightInPx = (int) (imageHeightDP * scale);
     }
@@ -79,10 +78,10 @@ public class ImageAdapter extends BaseAdapter {
 
         } else {
             imageView = (ImageView) view;
-            imageView.setLayoutParams(new GridView.LayoutParams(dpWidthInPx, dpHeightInPx));
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(10, 10, 10, 10);
+            //imageView.setLayoutParams(new GridView.LayoutParams(dpWidthInPx, dpHeightInPx));
+            //imageView.setAdjustViewBounds(true);
+            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            //imageView.setPadding(10, 10, 10, 10);
         }
 
         //Get the relevant bitmap
@@ -90,7 +89,7 @@ public class ImageAdapter extends BaseAdapter {
         NoteImage noteImage = imageList.get(i);
 
         setScaledBitmap(imageView, noteImage.imgUri);
-        //todo: move this back to getView, addin RAM control
+
         try {
      //imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
@@ -130,8 +129,6 @@ public class ImageAdapter extends BaseAdapter {
         this.imageList = imgList;
     }
 
-
-
     private void setScaledBitmap(ImageView mImageView, Uri imageUri){
         int targetW = this.dpWidthInPx;//mImageView.getWidth();
         int targetH = this.dpHeightInPx;//mImageView.getHeight();
@@ -158,6 +155,7 @@ public class ImageAdapter extends BaseAdapter {
         //Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
         mImageView.setImageBitmap(bitmap);
+        mImageView.setContentDescription(imagePath);
     }
 
     public class NoteImage {

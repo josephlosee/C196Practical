@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -36,6 +37,8 @@ public class NoteDetails extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 8888;
     public static final String BOOL_ISCOURSENOTE = "isCourseNote";
+    public static final String IMAGE_URI_STRING = "imageURI";
+    public static final String IMAGE_ID = "imageID";
     private boolean isCourseNote;
 
     EditText etTitle;
@@ -52,6 +55,8 @@ public class NoteDetails extends AppCompatActivity {
         setContentView(R.layout.activity_note_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageGrid = (GridView) findViewById(R.id.noteImages);
 
@@ -84,20 +89,30 @@ public class NoteDetails extends AppCompatActivity {
                     etContent.setText(note.getString(note.getColumnIndex(DBOpenHelper.NOTE_TEXT)));
                 }
             }
-            //This code should get a cursor of all the images associated with this note,
-            //Set it to an image adapter,
-            //Then set it the gridview and display all the related images.
-            //KEY WORD: SHOULD. Todo: test this.
-            //This is not working, why is the getImageView in ImageAdapter not working
 
+            //Get a cursor to the associated images
             String imgWhere = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES+"=?";
-            Cursor imagesCursor = MainActivity.dbProvider.query(DBProvider.NOTE_IMAGE_URI, null, imgWhere, whereArgs, null);
+            final Cursor imagesCursor = MainActivity.dbProvider.query(DBProvider.NOTE_IMAGE_URI, null, imgWhere, whereArgs, null);
             noteImagesAdapter = new ImageAdapter(this);
             noteImagesAdapter.setCursor(imagesCursor);
             //Logging yay
             Log.d("NoteDetails", "ImageAdapter created for "+ DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES + " length: "+ noteImagesAdapter.getCount());
 
             imageGrid.setAdapter(noteImagesAdapter);
+            imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Log.d("NoteDetails", "onItemClick for imageGrid item "+l);
+                        long id = l;
+                        ImageAdapter.NoteImage image = (ImageAdapter.NoteImage)adapterView.getAdapter().getItem(i);
+                        ImageView imageView = (ImageView)view;
+                        String imageURI = image.imgUri.getPath();
+                        Intent imageExpand = new Intent(NoteDetails.this, NoteImageView.class);
+                        imageExpand.putExtra(IMAGE_URI_STRING, imageURI);
+                        imageExpand.putExtra(IMAGE_ID, id);
+                        startActivity(imageExpand);
+                    }
+            });
         }//END OF SETUP IF A courseID or assessmentID was passed
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -131,30 +146,11 @@ public class NoteDetails extends AppCompatActivity {
         //ImageView imageView = (ImageView)findViewById(R.id.imageView2);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //TODO: This causes a crash because data is null?
-            /*Bundle extras = data.getExtras();
-            if (extras!=null){
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                //imageView.setImageBitmap(imageBitmap);
-                GridView imageGrid = (GridView)findViewById(R.id.noteImages);
-                Uri photoUri = (Uri) extras.get(MediaStore.EXTRA_OUTPUT);
-            }
-            else{
-                /*File image = new File(mCurrentPhotoPath);
-                Uri imageUri = Uri.fromFile(image);
-                ContentValues content = new ContentValues();
-                content.put(DBOpenHelper.NOTE_IMAGE_URI, imageUri.toString());
-
-                //For new notes, this id will be updated when the note is saved.
-                MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, content);*/
-            //}*/
-
-            //TODO: Does this work?
 
             //Send the image to the gallery
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            File f = new File(mCurrentPhotoPath);
-            Uri contentUri = Uri.fromFile(f);
+            //File f = new File(mCurrentPhotoPath);
+            Uri contentUri = Uri.parse(this.mCurrentPhotoPath);
             mediaScanIntent.setData(contentUri);
             this.sendBroadcast(mediaScanIntent);
 
@@ -168,6 +164,11 @@ public class NoteDetails extends AppCompatActivity {
 
     String mCurrentPhotoPath;
 
+    /**
+     * Creates an image file for the camera to write to
+     * @return
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -181,18 +182,20 @@ public class NoteDetails extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        Log.d("NoteDetails", "Image created at pate: " + mCurrentPhotoPath);
-        //TODO:
+        Log.d("NoteDetails", "Image created at path: " + mCurrentPhotoPath);
+
         return image;
     }
 
+    /**
+     * Saves the note and closes the activity
+     */
     @Override
     public void onBackPressed() {
         saveNote();
         //noteImagesAdapter.imageList.clear(); //Do i need this?
         finish();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -215,36 +218,40 @@ public class NoteDetails extends AppCompatActivity {
 
     //Save the note to the database
     public void saveNote(){
+
+        String title = etTitle.getText().toString();
+        String body = etContent.getText().toString();
+
         ContentValues noteInfo = new ContentValues();
 
-        noteInfo.put(DBOpenHelper.TITLE, etTitle.getText().toString());
-        noteInfo.put(DBOpenHelper.NOTE_TEXT, etContent.getText().toString());
+        noteInfo.put(DBOpenHelper.TITLE, title);
+        noteInfo.put(DBOpenHelper.NOTE_TEXT, body);
 
-        //TODO: check for assessment or course
-        noteInfo.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, parentID);
+            //If the coursenote bool is true, then set the foreign key for the course
+            //otherwise, assume the note is for an assessment.
+            if (isCourseNote) {
+                noteInfo.put(DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_COURSE, parentID);
+            } else {
+                noteInfo.put(DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_ASSESSMENT, parentID);
+            }
 
-        if (noteID==-1){
-            Uri insert = MainActivity.dbProvider.insert(DBProvider.NOTES_URI, noteInfo);
-            //noteID = Long.parseLong(insert.getLastPathSegment());
-            String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES+"=?";
-            String [] whereArgs = {String.valueOf(-1)};
-            ContentValues update = new ContentValues();
-            update.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES, insert.getLastPathSegment());
-            MainActivity.dbProvider.update(DBProvider.NOTE_IMAGE_URI, update, where, whereArgs);
-            //TODO: save the image information
-            //TODO: Change Note List to update
-            //Use arraylist of URIs to update the
-            //ImageView test = new ImageView();
-            //test.setImageBitmap();
-            //Bitmap test = new Bitmap();
-            //test./
 
-        }else{
-            noteInfo.put(DBOpenHelper.TABLE_ID, noteID);
-            String where = DBOpenHelper.TABLE_ID+"=?";
-            String[] whereArgs = {String.valueOf(noteID)};
-            MainActivity.dbProvider.update(DBProvider.NOTES_URI, noteInfo, where, whereArgs);
-        }
+            if (noteID == -1) {
+                Uri insert = MainActivity.dbProvider.insert(DBProvider.NOTES_URI, noteInfo);
+                //noteID = Long.parseLong(insert.getLastPathSegment());
+                String where = DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES + "=?";
+                String[] whereArgs = {String.valueOf(-1)};
+                ContentValues update = new ContentValues();
+                update.put(DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES, insert.getLastPathSegment());
+                MainActivity.dbProvider.update(DBProvider.NOTE_IMAGE_URI, update, where, whereArgs);
+
+
+            } else {
+                noteInfo.put(DBOpenHelper.TABLE_ID, noteID);
+                String where = DBOpenHelper.TABLE_ID + "=?";
+                String[] whereArgs = {String.valueOf(noteID)};
+                MainActivity.dbProvider.update(DBProvider.NOTES_URI, noteInfo, where, whereArgs);
+            }
     }
 
     @Override
@@ -281,5 +288,11 @@ public class NoteDetails extends AppCompatActivity {
         MainActivity.dbProvider.delete(DBProvider.NOTES_URI, delete, vals);
 
         this.finish();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        noteImagesAdapter.notifyDataSetChanged();
     }
 }//END OF CLASS
