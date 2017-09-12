@@ -1,12 +1,16 @@
 package edu.jlosee.c196practical;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -70,6 +74,7 @@ public class AssessmentActivity extends AppCompatActivity {
         this.finish();
     }
 
+
     //Save the assessment information and finish
     public void saveAssessment(){
         ContentValues content = new ContentValues();
@@ -87,7 +92,36 @@ public class AssessmentActivity extends AppCompatActivity {
     }
 
     public void assessmentAlertToggled(View v){
-        //TODO: Set Alert
+        //TODO: set notification as a timed one.
+        // Instantiate a Builder object.
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+        // Creates an Intent for the Activity
+        Intent notifyIntent =
+                new Intent(this, AssessmentActivity.class);
+        // Sets the Activity to start in a new, empty task
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        // Creates the PendingIntent
+        //PendingIntent.get
+        PendingIntent notifyPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        notifyIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        // Puts the PendingIntent into the notification builder
+        builder.setContentIntent(notifyPendingIntent);
+        // Notifications are issued by sending them to the
+        // NotificationManager system service.
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Builds an anonymous Notification object from the builder, and
+        // passes it to the NotificationManager
+        int id = 66525;
+        mNotificationManager.notify(id, builder.build());
     }
 
     @Override
@@ -149,4 +183,5 @@ public class AssessmentActivity extends AppCompatActivity {
             }
         });
     }
+
 }
