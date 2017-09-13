@@ -26,6 +26,15 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".WakefulReceiver"/>
+
+        <receiver android:name=".BootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
         <!--
            <provider
             android:name=".DBProvider"
