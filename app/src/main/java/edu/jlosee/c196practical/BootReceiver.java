@@ -1,5 +1,6 @@
 package edu.jlosee.c196practical;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,22 +19,22 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 
-            context = MainActivity.class;
+            //context = MainActivity.getApplicationContect();
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(context, WakefulReceiver.class);
+            Intent renewIntent = new Intent(context, WakefulReceiver.class);
             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             //// TODO: use calendar.add(Calendar.SECOND,MINUTE,HOUR, int);
-            //calendar.add(Calendar.SECOND, 10);
+            //This is a debug
+            calendar.add(Calendar.SECOND, 10);
 
             //ALWAYS recompute the calendar after using add, set, roll
             Date date = calendar.getTime();
 
             //Todo: change to set()
-            alarmManager.s
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, date.getTime(), alarmIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarmIntent);
         }
     }
 }
