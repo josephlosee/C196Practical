@@ -22,7 +22,6 @@
         android:onClick="courseNotesClicked"
         android:text="Notes"
         android:textAlignment="center"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="8dp"
@@ -41,7 +40,6 @@
         android:onClick="courseAssessmentsClicked"
         android:text="Assessments"
         android:textAlignment="center"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/courseNotesButton"
         app:layout_constraintTop_toBottomOf="@+id/mentorList" />
@@ -54,13 +52,11 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:focusableInTouchMode="false"
         android:gravity="center"
         android:inputType="none"
         android:text="Course Code"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,7 +165,6 @@
         android:layout_marginTop="16dp"
         android:text="Mentors"
         android:textSize="20sp"
-        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
 

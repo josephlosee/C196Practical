@@ -48,13 +48,19 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String ASSESSMENT_EARNED_SCORE = "earnedScore";
     public static final String ASSESSMENT_IS_OBJECTIVE = "isObjective";
 
+    //Alarm strings:
+    public static final String START_ALARM = "startAlarm";
+    public static final String END_ALARM = "endAlarm";
+
     //SQL to create term table:
     private static final String TERM_CREATE =
             "CREATE TABLE " + TABLE_TERM + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     TITLE + " TEXT, " +
-                    START_DATE + " TEXT,"+
-                    END_DATE + " TEXT "+ ")";
+                    START_DATE + " TEXT, "+
+                    END_DATE + " TEXT, " +
+                    START_ALARM + " BOOLEAN, " +
+                    END_ALARM + " BOOLEAN " + ")";
     //Term complete
 
     //SQL to create course table
@@ -96,11 +102,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String ASSESSMENT_CREATE =
             "CREATE TABLE " + TABLE_ASSESSMENT + " (" +
                     TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TITLE + " TEXT, "+
                     ASSESSMENT_DUE_DATE + " TEXT, "+
                     ASSESSMENT_IS_OBJECTIVE + " BOOLEAN, "+
                     ASSESSMENT_TARGET_SCORE + " INTEGER," +
                     ASSESSMENT_EARNED_SCORE + " INTEGER," +
                     TABLE_ID+TABLE_COURSE + " INTEGER, " +
+                    END_ALARM + " BOOLEAN, " +
                     "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
 
     public static final String MENTOR_NAME = "name";
@@ -119,7 +127,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " + TABLE_COURSE + " (" + TABLE_ID+ "), " +
             "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " + TABLE_MENTOR + " (" + TABLE_ID+ "))";
     public static final String[] ALL_TERM_COLS =
-            {TABLE_ID, TITLE, START_DATE, END_DATE};
+            {TABLE_ID, TITLE, START_DATE, END_DATE, START_ALARM, END_ALARM};
 
 
     public DBOpenHelper(Context context) {

@@ -43,7 +43,7 @@ public class TermDetailsActivity extends AppCompatActivity {
     }
 
     //TODO: Migrate to cursor loader in all relevant activities
-    //TODO: migrate to using long id instead of getting ID from cursor (so it is no longer final)
+
     private void setCourseListView(){
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {

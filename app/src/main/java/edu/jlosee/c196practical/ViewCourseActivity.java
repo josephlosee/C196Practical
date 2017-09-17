@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class ViewCourseActivity extends AppCompatActivity {
+    public static final String IS_ASSESSMENT = "isAssessment";
     private long courseID = -1;
     public static final String NOTE_ID = "noteID";
 
@@ -102,8 +103,9 @@ public class ViewCourseActivity extends AppCompatActivity {
 
     public void courseAssessmentsClicked(View view) {
         //TODO: diplays the assessment list activity, right now this
-        Intent assessmentIntent = new Intent(this, AssessmentActivity.class);
+        Intent assessmentIntent = new Intent(this, NoteListActivity.class);
         assessmentIntent.putExtra(TermDetailsActivity.COURSE_ID, this.courseID);
+        assessmentIntent.putExtra(IS_ASSESSMENT, true);
         startActivity(assessmentIntent);
     }
 

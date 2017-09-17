@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
@@ -32,15 +33,25 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
 
     private String notificationMessage = "DEBUG: This message was not assigned.";
     private Class<?> activityClass = MainActivity.class;
+    private Calendar targetAlarmTime = Calendar.getInstance();
 
+    //When the time is reached, this is called.
     public void onReceive(Context context, Intent intent) {
-        //// TODO: post notification
+        Bundle test = intent.getExtras();
+
+        //See if the intent extras are retained.
+        if (test!=null){
+            String noteMsg = test.getString("notificationMessage");
+
+            Log.d("WakefulReceiver", "onReceive arg Intent notification message: " +noteMsg);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.drawable.ic_stat_name);
+        builder.setContentText(notificationMessage);
+
         // Creates an Intent for the Activity
-        Intent notifyIntent =
-                new Intent(context, AssessmentActivity.class);
+        Intent notifyIntent = new Intent(context, activityClass);
         // Sets the Activity to start in a new, empty task
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -65,35 +76,51 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
         int id = 66525;
         mNotificationManager.notify(id, builder.build());
 
+        //Indicate that this has been completed.
         WakefulReceiver.completeWakefulIntent(intent);
     }
 
     /**
-     * Sets the next alarm to run. When the alarm fires,
-     * the app broadcasts an Intent to this WakefulBroadcastReceiver.
      *
-     * @param context the context of the app's Activity.
+     * @param context - context
+     * @param targetAlarmTime - Calendar time that the alarm will be set for
+     * @param notificationMessage - Message to place in the notification when it fires.
+     * @param activityClass - Related class
+     * @param id - id of the object that the alert is set for
      */
-    public void setAlarm(Context context) {
+    public void setAlarm(Context context, Calendar targetAlarmTime, String notificationMessage, Class<?> activityClass, int id) {
+        if (notificationMessage!= null){
+            this.notificationMessage=notificationMessage;
+        }
+        if (activityClass!=null){
+            this.activityClass=activityClass;
+        }
+
+        if (targetAlarmTime!=null){
+            Log.d("WakefulReceiver", "null Calendar passed to setAlarm, using default of current time+20s");
+        }else{
+
+        }
+
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, WakefulReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        intent.putExtra("notificationMessage", "TestMessageFromSetAlarm");
 
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+
+        //TODO: Use passed in calendar after this is finished being tested.
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        //// TODO: use calendar.add(Calendar.SECOND,MINUTE,HOUR, int);
-        //calendar.add(Calendar.SECOND, 10);
-
+        /// this is unnecessary , will remove later: calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 20);
         //ALWAYS recompute the calendar after using add, set, roll
-        Date date = calendar.getTime();
 
-        //Todo: change to set
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarmIntent);
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
 
         // Enable {@code BootReceiver} to automatically restart when the
         // device is rebooted.
-        //// TODO: you may need to reference the context by ApplicationActivity.class
+       //// TODO: you may need to reference the context by ApplicationActivity.class, probably not?
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
+        //receiver.
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
@@ -105,17 +132,22 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
      *
      * @param context the context of the app's Activity
      */
-    public void cancelAlarm(Context context) {
+    public void cancelAlarm(Context context, int id) {
         Log.d("WakefulAlarmReceiver", "{cancelAlarm}");
 
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, WakefulReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        mAlarmManager.cancel(alarmIntent);
+        //Cancels the alarm only if its found.
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_NO_CREATE);
+        if (alarmIntent!=null){
+            mAlarmManager.cancel(alarmIntent);
+        }
+
 
         // Disable {@code BootReceiver} so that it doesn't automatically restart when the device is rebooted.
         //// TODO: you may need to reference the context by ApplicationActivity.class
+        //TODO DO I?
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
