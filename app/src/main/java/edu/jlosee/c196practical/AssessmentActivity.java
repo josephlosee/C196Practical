@@ -42,6 +42,7 @@ public class AssessmentActivity extends AppCompatActivity {
     ListView noteList;
     private Switch alertToggle;
     private WakefulReceiver alertReceiver = new WakefulReceiver();
+    private long courseID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class AssessmentActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
             assessmentID = extras.getLong(AssessmentActivity.ASSESSMENT_ID);
+            courseID = extras.getLong(TermDetailsActivity.COURSE_ID);
             if(assessmentID!=-1){
                 String idQuery = "where _id = ?";
                 String[] idArg = {String.valueOf(assessmentID)};
@@ -108,6 +110,7 @@ public class AssessmentActivity extends AppCompatActivity {
         ContentValues content = new ContentValues();
         content.put(DBOpenHelper.ASSESSMENT_DUE_DATE, etDueDate.getText().toString());
         content.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, objectiveRadio.isChecked());
+        content.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
         content.put(DBOpenHelper.END_ALARM, alarmState);
         if (assessmentID == -1){
             //if we don't have an assessment id, must be a new assessment
