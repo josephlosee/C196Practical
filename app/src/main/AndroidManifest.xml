@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".WakefulReceiver"/>
-
-        <receiver android:name=".BootReceiver"
+        <receiver android:name=".WakefulReceiver" />
+        <receiver
+            android:name=".BootReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -57,7 +57,7 @@
         <activity
             android:name=".EditTermActivity"
             android:label="@string/title_activity_create_term"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".TermListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -66,7 +66,7 @@
         <activity
             android:name=".TermDetailsActivity"
             android:label="@string/title_activity_view_term"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".TermListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -75,7 +75,7 @@
         <activity
             android:name=".NoteListActivity"
             android:label="@string/title_activity_note"
-            android:parentActivityName=".TermDetailsActivity"
+            android:parentActivityName=".ViewCourseActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -84,7 +84,7 @@
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessment"
-            android:parentActivityName=".TermDetailsActivity"
+            android:parentActivityName=".ViewCourseActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -121,7 +121,8 @@
             android:name=".NoteDetails"
             android:label="@string/title_activity_note_details"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NoteImageView"></activity>
+        <activity android:name=".NoteImageView" />
+        <activity android:name=".CourseList"></activity>
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 public class ViewCourseActivity extends AppCompatActivity {
     public static final String IS_ASSESSMENT = "isAssessment";
+    public static final String COURSE_ID = "courseID";
     private long courseID = -1;
     public static final String NOTE_ID = "noteID";
 
@@ -33,7 +35,7 @@ public class ViewCourseActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         if (bundle!=null){
-            courseID = bundle.getLong(TermDetailsActivity.COURSE_ID);
+            courseID = bundle.getLong(ViewCourseActivity.COURSE_ID);
 
             String[] columns = {DBOpenHelper.TABLE_ID, DBOpenHelper.TITLE};
             String selection = DBOpenHelper.TABLE_ID+"=?";
@@ -84,12 +86,36 @@ public class ViewCourseActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Trying this to stop the keyboard from showing
+        if (this.getCurrentFocus()!=null){
+            this.getCurrentFocus().clearFocus();
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_editsavecancel, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        boolean ret = false;
+        int id = item.getItemId();
+        switch (id){
+            case android.R.id.home:
+                //TODO: Save information for course;
+                this.finish();
+                break;
+            case R.id.action_delete:
+                //TODO: prompt and delete
+                break;
+            default:break;
+
+        }
+        return ret;
     }
 
 
@@ -102,16 +128,15 @@ public class ViewCourseActivity extends AppCompatActivity {
     }
 
     public void courseAssessmentsClicked(View view) {
-        //TODO: diplays the assessment list activity, right now this
         Intent assessmentIntent = new Intent(this, NoteListActivity.class);
-        assessmentIntent.putExtra(TermDetailsActivity.COURSE_ID, this.courseID);
+        assessmentIntent.putExtra(COURSE_ID, this.courseID);
         assessmentIntent.putExtra(IS_ASSESSMENT, true);
         startActivity(assessmentIntent);
     }
 
     public void courseNotesClicked(View view) {
         Intent noteIntent = new Intent(this, NoteListActivity.class);
-        noteIntent.putExtra(TermDetailsActivity.COURSE_ID, this.courseID);
+        noteIntent.putExtra(ViewCourseActivity.COURSE_ID, this.courseID);
         startActivity(noteIntent);
     }
 }//End of Class

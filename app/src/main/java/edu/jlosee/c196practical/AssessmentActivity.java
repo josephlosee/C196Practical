@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -64,7 +65,7 @@ public class AssessmentActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
             assessmentID = extras.getLong(AssessmentActivity.ASSESSMENT_ID);
-            courseID = extras.getLong(TermDetailsActivity.COURSE_ID);
+            courseID = extras.getLong(ViewCourseActivity.COURSE_ID);
             if(assessmentID!=-1){
                 String idQuery = "where _id = ?";
                 String[] idArg = {String.valueOf(assessmentID)};
@@ -89,9 +90,10 @@ public class AssessmentActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Make this add a note, code is in note list activity class
+                //Lets the user add a note to the assessment.
                 Intent assessmentNoteIntent = new Intent(AssessmentActivity.this, NoteDetails.class);
-                assessmentNoteIntent.putExtra(ASSESSMENT_ID, assessmentID);
+                assessmentNoteIntent.putExtra(NoteDetails.PARENT_ID, assessmentID);
+                assessmentNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, false);
                 startActivity(assessmentNoteIntent);
             }
         });
@@ -115,7 +117,9 @@ public class AssessmentActivity extends AppCompatActivity {
         if (assessmentID == -1){
             //if we don't have an assessment id, must be a new assessment
             Uri insertUri = MainActivity.dbProvider.insert(DBProvider.ASSESSMENT_URI, content);
-            assessmentID = Long.parseLong(insertUri.getLastPathSegment());
+            if (insertUri!=null) {
+                assessmentID = Long.parseLong(insertUri.getLastPathSegment());
+            }
         }
         else{
             String updateWhere = DBOpenHelper.TABLE_ID+"=?";
@@ -146,7 +150,9 @@ public class AssessmentActivity extends AppCompatActivity {
                         AssessmentActivity.class,
                         (int)assessmentID);
             } catch (ParseException e) {
-                //TODO: Make an alert telling the user to select a valid date
+                Snackbar.make(this.getCurrentFocus(), "Enter a valid due date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
+                        .show();
+
                 e.printStackTrace();
             }
 
@@ -163,7 +169,29 @@ public class AssessmentActivity extends AppCompatActivity {
         return true;
     }
 
-    public void alertConfirmation(){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        boolean ret = false;
+
+        switch(id){
+            case(android.R.id.home):
+                saveAssessment();
+                this.finish();
+                break;
+            case(R.id.action_delete):
+                alertDeleteConfirmation();
+                break;
+            default:
+                break;
+        }
+        return ret;
+    }
+
+    /**
+     * Displays an alert that asks if the user wants to delete the assessment`
+     */
+    public void alertDeleteConfirmation(){
         //boolean ret = false;
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage("Delete this item? This action cannot be undone.");
@@ -186,7 +214,11 @@ public class AssessmentActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Deletes the current assessment
+     */
     public void deleteAssessment(){
+        //Delete the assessment from the table
         String delete = DBOpenHelper.TABLE_ID+"=?";
         String[] vals = {String.valueOf(this.assessmentID)};
         MainActivity.dbProvider.delete(DBProvider.ASSESSMENT_URI, delete, vals);

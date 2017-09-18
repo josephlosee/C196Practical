@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     //private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
+    public SimpleDateFormat sdfNoTime = new SimpleDateFormat("yyyy-MM-dd");
 
     private ListView termListView;
 
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         courses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent courseIntent = new Intent(MainActivity.this, TermDetailsActivity.class);
+                //TODO: fix this
+                Intent courseIntent = new Intent(MainActivity.this, EditTermActivity.class);
                 startActivity(courseIntent);
             }
         });
@@ -108,29 +110,6 @@ public class MainActivity extends AppCompatActivity {
         navButtons.addView(courses);
         navButtons.addView(mentors);
 
-        //Add the layout to the constraint layout
-        //maincontent.addView(navButtons);
-
-        /* Debug stuff
-        simpleDateFormat.setCalendar(Calendar.getInstance());
-        String startDate = simpleDateFormat.format(Calendar.getInstance().getTime());
-        Log.d("MainActivity", "Created start date: "+ startDate);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, 6);
-        String endDate = simpleDateFormat.format(cal.getTime());
-        Log.d("MainActivity", "Created end date: "+ endDate);
-        */
-
-        /* TODO Move this to TermListActivity later
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {//TODO: Make this a Add Term Button? Share?
-                Intent intent = new Intent(getApplicationContext(), EditTermActivity.class);
-                startActivity(intent);
-
-            }
-        });*/
     }
 
     /*
@@ -206,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
             start.add(Calendar.MONTH, 3*t);
             end.add(Calendar.MONTH, 3*t+1);
             term.put(DBOpenHelper.TITLE, "Term "+(t+1));
-            term.put(DBOpenHelper.START_DATE, simpleDateFormat.format(start.getTime()));
-            term.put(DBOpenHelper.END_DATE, simpleDateFormat.format(start.getTime()));
+            term.put(DBOpenHelper.START_DATE, sdfNoTime.format(start.getTime()));
+            term.put(DBOpenHelper.END_DATE, sdfNoTime.format(start.getTime()));
 
             Uri insertedTerm = provider.insert(DBProvider.TERM_URI, term);
             int termID = Integer.parseInt(insertedTerm.getLastPathSegment());

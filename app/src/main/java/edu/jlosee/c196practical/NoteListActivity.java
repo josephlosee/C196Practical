@@ -47,7 +47,7 @@ public class NoteListActivity extends AppCompatActivity {
 
         if (noteExtras!= null){ //quick null check
             //Fill in all the fun stuff
-            courseID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
+            courseID = noteExtras.getLong(ViewCourseActivity.COURSE_ID);
             isAssessmentList = noteExtras.getBoolean(ViewCourseActivity.IS_ASSESSMENT);
             //assessmentID = noteExtras.getLong(AssessmentActivity.ASSESSMENT_ID);
             if (isAssessmentList){
@@ -66,7 +66,7 @@ public class NoteListActivity extends AppCompatActivity {
                     //Create the note intent and pass in relevant information needed.
                     Intent newNoteIntent = new Intent(NoteListActivity.this, NoteDetails.class);
                     newNoteIntent.putExtra(ViewCourseActivity.NOTE_ID, (long) -1); //flag value
-                    newNoteIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                    newNoteIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
 
                     //Flag for assessment notes
                     newNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
@@ -81,7 +81,7 @@ public class NoteListActivity extends AppCompatActivity {
                     //Create the assessment intent and pass in relevant information needed.
                     Intent assessmentIntent = new Intent(NoteListActivity.this, AssessmentActivity.class);
                     assessmentIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, (long) -1); //flag value
-                    assessmentIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                    assessmentIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
 
                     startActivity(assessmentIntent);
                 }
@@ -107,7 +107,7 @@ public class NoteListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Intent selectedItemIntent = new Intent(NoteListActivity.this, NoteDetails.class);
                 selectedItemIntent.putExtra(NOTE_ID, id);
-                selectedItemIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                selectedItemIntent.putExtra(NoteDetails.PARENT_ID, courseID);
                 selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
                 startActivity(selectedItemIntent);
             }
@@ -133,7 +133,7 @@ public class NoteListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Intent selectedItemIntent = new Intent(NoteListActivity.this, AssessmentActivity.class);
                 selectedItemIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, id);
-                selectedItemIntent.putExtra(TermDetailsActivity.COURSE_ID, courseID);
+                selectedItemIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
                 //selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
                 startActivity(selectedItemIntent);
             }

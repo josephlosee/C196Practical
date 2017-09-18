@@ -15,7 +15,7 @@ import android.widget.SimpleCursorAdapter;
 
 public class TermDetailsActivity extends AppCompatActivity {
 
-    ListView courseList;
+    private ListView courseList;
     public static final String COURSE_ID = "courseID";
     private static long termID = -1;
 
@@ -76,7 +76,7 @@ public class TermDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Snackbar.make(getCurrentFocus(), "Testing onActivityResult", Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(getCurrentFocus(), "Testing onActivityResult", Snackbar.LENGTH_LONG).show();
     }
 
 

@@ -1,5 +1,7 @@
 package edu.jlosee.c196practical;
 
+//THIS CLASS IS DONE -9/17 JLosee
+
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +41,7 @@ public class NoteDetails extends AppCompatActivity {
     public static final String BOOL_ISCOURSENOTE = "isCourseNote";
     public static final String IMAGE_URI_STRING = "imageURI";
     public static final String IMAGE_ID = "imageID";
+    public static final String PARENT_ID = "parentID";
     private boolean isCourseNote;
 
     EditText etTitle;
@@ -76,10 +79,10 @@ public class NoteDetails extends AppCompatActivity {
             if (isCourseNote){
                 //Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
                 Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
-                parentID = noteExtras.getLong(TermDetailsActivity.COURSE_ID);
+                parentID = noteExtras.getLong(PARENT_ID);
             }
             else{//assumed: is assessmentNote
-                parentID = noteExtras.getLong(AssessmentActivity.ASSESSMENT_ID);
+                parentID = noteExtras.getLong(PARENT_ID);
             }
             Cursor note = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
 
@@ -101,15 +104,14 @@ public class NoteDetails extends AppCompatActivity {
             imageGrid.setAdapter(noteImagesAdapter);
             imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Log.d("NoteDetails", "onItemClick for imageGrid item "+l);
-                        long id = l;
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long itemID) {
+                        Log.d("NoteDetails", "onItemClick for imageGrid item "+itemID);
                         ImageAdapter.NoteImage image = (ImageAdapter.NoteImage)adapterView.getAdapter().getItem(i);
                         ImageView imageView = (ImageView)view;
                         String imageURI = image.imgUri.getPath();
                         Intent imageExpand = new Intent(NoteDetails.this, NoteImageView.class);
                         imageExpand.putExtra(IMAGE_URI_STRING, imageURI);
-                        imageExpand.putExtra(IMAGE_ID, id);
+                        imageExpand.putExtra(IMAGE_ID, itemID);
                         startActivity(imageExpand);
                     }
             });
@@ -209,8 +211,8 @@ public class NoteDetails extends AppCompatActivity {
                 alertConfirmation();
                 break;
             default:
-                String test = "The selected menu item does not have code.";
-                Snackbar.make(getCurrentFocus(), test, Snackbar.LENGTH_LONG).show();
+                String strNoCodeForMenuItem = "The selected menu item does not have code.";
+                Snackbar.make(getCurrentFocus(), strNoCodeForMenuItem, Snackbar.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -238,13 +240,14 @@ public class NoteDetails extends AppCompatActivity {
 
             if (noteID == -1) {
                 Uri insert = MainActivity.dbProvider.insert(DBProvider.NOTES_URI, noteInfo);
-                //noteID = Long.parseLong(insert.getLastPathSegment());
-                String where = DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES + "=?";
-                String[] whereArgs = {String.valueOf(-1)};
-                ContentValues update = new ContentValues();
-                update.put(DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES, insert.getLastPathSegment());
-                MainActivity.dbProvider.update(DBProvider.NOTE_IMAGE_URI, update, where, whereArgs);
 
+                if (insert!=null) {
+                    String where = DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES + "=?";
+                    String[] whereArgs = {String.valueOf(-1)};
+                    ContentValues update = new ContentValues();
+                    update.put(DBOpenHelper.TABLE_ID + DBOpenHelper.TABLE_NOTES, insert.getLastPathSegment());
+                    MainActivity.dbProvider.update(DBProvider.NOTE_IMAGE_URI, update, where, whereArgs);
+                }
 
             } else {
                 noteInfo.put(DBOpenHelper.TABLE_ID, noteID);

@@ -92,7 +92,7 @@ public class TermListActivity extends AppCompatActivity{
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(TermListActivity.this, TermDetailsActivity.class);
+                Intent intent = new Intent(TermListActivity.this, EditTermActivity.class);
 
                 Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
 
