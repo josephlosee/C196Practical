@@ -14,7 +14,7 @@
         android:id="@+id/courseNotesButton"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="135dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
@@ -23,26 +23,69 @@
         android:text="Notes"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/mentorList" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/courseAssessmentButton"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="135dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:gravity="bottom"
         android:onClick="courseAssessmentsClicked"
         android:text="Assessments"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/courseNotesButton"
+        app:layout_constraintLeft_toRightOf="@+id/courseNotesButton" />
+
+    <EditText
+        android:id="@+id/termStart"
+        android:layout_width="160dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/start_date"
+        android:inputType="date"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mentorList" />
+
+    <EditText
+        android:id="@+id/termEnd"
+        android:layout_width="160dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:ems="10"
+        android:hint="@string/end_date"
+        android:inputType="date"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/termStart"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/startDateButton"
+        android:layout_width="@dimen/calendarButtonSquare"
+        android:layout_height="@dimen/calendarButtonSquare"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:drawable/ic_menu_today"
+        app:layout_constraintLeft_toRightOf="@+id/termStart"
+        app:layout_constraintTop_toTopOf="@+id/termStart" />
+
+    <Button
+        android:id="@+id/endDateButton"
+        android:layout_width="@dimen/calendarButtonSquare"
+        android:layout_height="@dimen/calendarButtonSquare"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:drawable/ic_menu_today"
+        app:layout_constraintLeft_toRightOf="@+id/termEnd"
+        app:layout_constraintTop_toTopOf="@+id/termEnd" />
 
     <TextView
         android:id="@+id/tvCourseCode"
@@ -79,14 +122,14 @@
         android:layout_height="40dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:ems="10"
         android:enabled="true"
         android:inputType="textPersonName"
         android:maxLines="1"
         android:text="Name"
         app:layout_constraintLeft_toRightOf="@+id/tvCourseTitle"
-        app:layout_constraintTop_toBottomOf="@+id/etCourseCode" />
+        app:layout_constraintTop_toTopOf="@+id/tvCourseTitle" />
 
     <TextView
         android:id="@+id/tvCourseTitle"
@@ -162,7 +205,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Mentors"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -198,7 +241,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:visibility="visible"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"

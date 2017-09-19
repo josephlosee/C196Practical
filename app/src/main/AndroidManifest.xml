@@ -105,10 +105,6 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DeleteItemsActivity"
-            android:label="@string/title_activity_delete_items"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".TermListActivity"
             android:label="@string/title_activity_term_list"
             android:parentActivityName=".MainActivity"

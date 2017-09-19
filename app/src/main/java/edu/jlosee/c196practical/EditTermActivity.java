@@ -141,7 +141,9 @@ public class EditTermActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        (getCurrentFocus()!=null)?getCurrentFocus().clearFocus():null;
+        if (getCurrentFocus()!=null){
+            getCurrentFocus().clearFocus();
+        }
     }
 
     protected void save(){

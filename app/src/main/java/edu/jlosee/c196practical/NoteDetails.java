@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class NoteDetails extends AppCompatActivity {
     public static final String IMAGE_URI_STRING = "imageURI";
     public static final String IMAGE_ID = "imageID";
     public static final String PARENT_ID = "parentID";
+    private final int SHARE_ID = 544123;
     private boolean isCourseNote;
 
     EditText etTitle;
@@ -210,12 +212,21 @@ public class NoteDetails extends AppCompatActivity {
             case R.id.action_delete:
                 alertConfirmation();
                 break;
+            case SHARE_ID:
+                shareNote();
+                break;
             default:
                 String strNoCodeForMenuItem = "The selected menu item does not have code.";
                 Snackbar.make(getCurrentFocus(), strNoCodeForMenuItem, Snackbar.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareNote() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, etTitle+"\n"+etContent);
+        startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 
     //Save the note to the database
@@ -297,5 +308,14 @@ public class NoteDetails extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         noteImagesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem shareItem = menu.add(SHARE_ID);
+        shareItem.setIcon(R.drawable.ic_share);
+        shareItem.setVisible(true);
+        shareItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onPrepareOptionsMenu(menu);
     }
 }//END OF CLASS

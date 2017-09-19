@@ -28,6 +28,8 @@ public class ViewCourseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO: NEED COURSE START/END DATE ADDED
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_course);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
