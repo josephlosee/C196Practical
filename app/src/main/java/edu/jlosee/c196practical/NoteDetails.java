@@ -225,7 +225,8 @@ public class NoteDetails extends AppCompatActivity {
 
     private void shareNote() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, etTitle+"\n"+etContent);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, etTitle.getText()+"\n"+etContent.getText());
         startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 
@@ -312,7 +313,8 @@ public class NoteDetails extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem shareItem = menu.add(SHARE_ID);
+        MenuItem shareItem = menu.add(Menu.NONE, SHARE_ID, Menu.NONE, "Share");
+        //this.SHARE_ID = shareItem.getItemId();
         shareItem.setIcon(R.drawable.ic_share);
         shareItem.setVisible(true);
         shareItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
