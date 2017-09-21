@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 public class MentorCursorAdapter extends CursorAdapter{
 
+
     public MentorCursorAdapter(Context context, Cursor cursor){
         super(context, cursor, 0);
     }
@@ -44,5 +45,6 @@ public class MentorCursorAdapter extends CursorAdapter{
         //int priority = cursor.getInt(cursor.getColumnIndexOrThrow("priority"));
 
         checkBox.setChecked(true);
+        //TODO: add the mentor ID here somehow
     }
 }

@@ -66,7 +66,7 @@ public class ViewCourseActivity extends AppCompatActivity {
 
             String[]joinArgs = {String.valueOf(courseID)};
             //Cursor mentorsCursor = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, joinArgs);
-            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor;", null);
+            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor where _idCourse=?;", joinArgs);
 
             mentorList = (ListView)findViewById(R.id.mentorList);
             CursorAdapter mentorAdapter = new MentorCursorAdapter(this, mentorsCursor);
@@ -122,6 +122,10 @@ public class ViewCourseActivity extends AppCompatActivity {
 
 
     public void addMentorClicked(View view) {
+        Intent addMentorIntent = new Intent(this, MentorList.class);
+        addMentorIntent.putExtra(COURSE_ID, this.courseID);
+        addMentorIntent.putExtra(MentorList.FLAG_REMOVE, false);
+        startActivity(addMentorIntent);
         //TODO: display the mentors list, put an extra with add/delete/view flag
     }
 

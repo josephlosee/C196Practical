@@ -112,4 +112,5 @@ Mauris mauris sapien, luctus a porttitor quis, rutrum ut lacus. Donec eget leo s
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="remindMe">Remind Me</string>
+    <string name="title_activity_mentor_details">MentorDetails</string>
 </resources>
