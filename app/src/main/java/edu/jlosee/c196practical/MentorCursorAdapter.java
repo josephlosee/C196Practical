@@ -31,7 +31,7 @@ public class MentorCursorAdapter extends CursorAdapter{
         TextView mentorName = (TextView) view.findViewById(R.id.mentorName);
         TextView mentorPhone = (TextView) view.findViewById(R.id.mentorPhone);
         TextView mentorEmail = (TextView) view.findViewById(R.id.mentorEmail);
-        CheckBox checkBox = (CheckBox)view.findViewById(R.id.mentorAdd);
+        //CheckBox checkBox = (CheckBox)view.findViewById(R.id.mentorAdd);
 
         // Extract properties from cursor
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DBOpenHelper.MENTOR_NAME));
@@ -44,7 +44,9 @@ public class MentorCursorAdapter extends CursorAdapter{
 
         //int priority = cursor.getInt(cursor.getColumnIndexOrThrow("priority"));
 
-        checkBox.setChecked(true);
+        //heckBox.setChecked(true);
         //TODO: add the mentor ID here somehow
+        TextView mentorID = (TextView) view.findViewById(R.id.mentorID);
+        mentorID.setText(cursor.getString(cursor.getColumnIndexOrThrow(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR)));
     }
 }

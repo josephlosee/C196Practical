@@ -37,6 +37,15 @@
         android:id="@+id/mentorAdd"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/mentorID"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:text="888"
+        android:visibility="invisible" />
 
 </LinearLayout>

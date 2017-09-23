@@ -10,11 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MentorList extends AppCompatActivity {
     public static final String FLAG_REMOVE = "removeFlag";
+    private Cursor mentorForCourse;
     private long courseId = -1;
+    private ListView mentorListView;
+    private CursorAdapter adapter;
 
     private boolean removeFlag = false;
     @Override
@@ -25,7 +30,7 @@ public class MentorList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ListView mentorListView = (ListView)findViewById(R.id.mentorListView);
+        mentorListView = (ListView)findViewById(R.id.mentorListView);
 
         Bundle courseBundle = getIntent().getExtras();
         if (courseBundle!=null){
@@ -33,8 +38,10 @@ public class MentorList extends AppCompatActivity {
             //TODO: Then Query MENTOR TABLE for mentor info, then populate the ListView
 
             String[] selectionArgs = {String.valueOf(courseBundle.getInt(ViewCourseActivity.COURSE_ID))};
-            Cursor mentorForCourse = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, selectionArgs);
-            CursorAdapter adapter = new MentorCursorAdapter(this, mentorForCourse);
+
+            mentorForCourse = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, selectionArgs);
+
+            adapter = new MentorCursorAdapter(this, mentorForCourse);
             mentorListView.setAdapter(adapter);
 
             removeFlag = courseBundle.getBoolean(FLAG_REMOVE);
@@ -48,7 +55,12 @@ public class MentorList extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR+"=?";
                         String[] whereArgs = {String.valueOf(id)};
+
+                        LinearLayout mentorLL = (LinearLayout)view;
+                        TextView tvMentorID = (TextView) mentorLL.getChildAt(4);
+
                         MainActivity.dbProvider.delete(DBProvider.COURSE_MENTORS_URI, where, whereArgs);
+                        refreshCursor();
                     }
                 });
 
@@ -63,9 +75,11 @@ public class MentorList extends AppCompatActivity {
                         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR+"=?";
                         String[] whereArgs = {String.valueOf(id)};
                         ContentValues courseMentorAddition = new ContentValues();
-                        adapterView.getAdapter().getItem(id);
+                        //adapterView.getAdapter().getItem(i).;
                         courseMentorAddition.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR, id);
+                        courseMentorAddition.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, TEMP_COURSE_ID);
                         MainActivity.dbProvider.insert(DBProvider.COURSE_MENTORS_URI, courseMentorAddition);
+                        refreshCursor();
                     }
                 });
             }
@@ -95,5 +109,15 @@ public class MentorList extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        refreshCursor();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-}
+    private void refreshCursor(){
+        mentorForCourse.requery();
+        this.adapter.changeCursor(mentorForCourse);
+    }
+
+}//END OF CLASS
