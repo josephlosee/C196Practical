@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.jlosee.c196practical.EditTermActivity">
+    tools:context="edu.jlosee.c196practical.TermDetails">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

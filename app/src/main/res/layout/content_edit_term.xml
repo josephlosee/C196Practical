@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.jlosee.c196practical.EditTermActivity"
+    tools:context="edu.jlosee.c196practical.TermDetails"
     tools:showIn="@layout/activity_edit_term">
 
     <TextView
@@ -78,6 +78,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:background="@android:drawable/ic_menu_today"
+        android:onClick="startDateCalendar"
         app:layout_constraintLeft_toRightOf="@+id/termStart"
         app:layout_constraintTop_toTopOf="@+id/termStart" />
 
@@ -88,6 +89,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:background="@android:drawable/ic_menu_today"
+        android:onClick="endDateCalendar"
         app:layout_constraintLeft_toRightOf="@+id/termEnd"
         app:layout_constraintTop_toTopOf="@+id/termEnd" />
 

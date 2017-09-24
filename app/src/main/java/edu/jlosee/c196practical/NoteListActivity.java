@@ -12,11 +12,11 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import static edu.jlosee.c196practical.ViewCourseActivity.NOTE_ID;
+import static edu.jlosee.c196practical.CourseDetails.NOTE_ID;
 
 /**
  * NoteList activity
- * Used for displaying both the List of Assessments and List of Notes, called by ViewCourseActivity
+ * Used for displaying both the List of Assessments and List of Notes, called by CourseDetails
  * Tapping the list items displays the details of those items.
  */
 
@@ -28,9 +28,6 @@ public class NoteListActivity extends AppCompatActivity {
     private Cursor notes;
     private CursorAdapter cursorAdapter;
     private ListView noteList;
-
-    //TODO: add assessment foreign key to the Note table
-    //TODO: will checking for a nonexistent key crash the program?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +44,8 @@ public class NoteListActivity extends AppCompatActivity {
 
         if (noteExtras!= null){ //quick null check
             //Fill in all the fun stuff
-            courseID = noteExtras.getLong(ViewCourseActivity.COURSE_ID);
-            isAssessmentList = noteExtras.getBoolean(ViewCourseActivity.IS_ASSESSMENT);
+            courseID = noteExtras.getLong(CourseDetails.COURSE_ID);
+            isAssessmentList = noteExtras.getBoolean(CourseDetails.IS_ASSESSMENT);
             //assessmentID = noteExtras.getLong(AssessmentActivity.ASSESSMENT_ID);
             if (isAssessmentList){
                 setAssessmentList();
@@ -65,8 +62,8 @@ public class NoteListActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     //Create the note intent and pass in relevant information needed.
                     Intent newNoteIntent = new Intent(NoteListActivity.this, NoteDetails.class);
-                    newNoteIntent.putExtra(ViewCourseActivity.NOTE_ID, (long) -1); //flag value
-                    newNoteIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
+                    newNoteIntent.putExtra(CourseDetails.NOTE_ID, (long) -1); //flag value
+                    newNoteIntent.putExtra(CourseDetails.COURSE_ID, courseID);
 
                     //Flag for assessment notes
                     newNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
@@ -81,7 +78,7 @@ public class NoteListActivity extends AppCompatActivity {
                     //Create the assessment intent and pass in relevant information needed.
                     Intent assessmentIntent = new Intent(NoteListActivity.this, AssessmentActivity.class);
                     assessmentIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, (long) -1); //flag value
-                    assessmentIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
+                    assessmentIntent.putExtra(CourseDetails.COURSE_ID, courseID);
 
                     startActivity(assessmentIntent);
                 }
@@ -133,7 +130,7 @@ public class NoteListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Intent selectedItemIntent = new Intent(NoteListActivity.this, AssessmentActivity.class);
                 selectedItemIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, id);
-                selectedItemIntent.putExtra(ViewCourseActivity.COURSE_ID, courseID);
+                selectedItemIntent.putExtra(CourseDetails.COURSE_ID, courseID);
                 //selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
                 startActivity(selectedItemIntent);
             }

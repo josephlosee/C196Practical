@@ -1,11 +1,7 @@
 package edu.jlosee.c196practical;
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,8 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-
-import java.util.List;
 
 public class TermListActivity extends AppCompatActivity{
     private CursorAdapter cursorAdapter;
@@ -40,7 +34,7 @@ public class TermListActivity extends AppCompatActivity{
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 /*
-        cursorAdapter = new TermCursorAdapter(this, null);
+        cursorAdapter = new CursorAdapterTerm(this, null);
         termListView = (ListView)findViewById(R.id.lvTermsSummary);
         termListView.setAdapter(cursorAdapter);
 
@@ -85,14 +79,14 @@ public class TermListActivity extends AppCompatActivity{
         //String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
         //int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
         //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
-        this.cursorAdapter = new TermCursorAdapter(this, cursor);
+        this.cursorAdapter = new CursorAdapterTerm(this, cursor);
 
         termListView.setAdapter(cursorAdapter);
 
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(TermListActivity.this, EditTermActivity.class);
+                Intent intent = new Intent(TermListActivity.this, TermDetails.class);
 
                 Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
 

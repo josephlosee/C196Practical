@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     //private ArrayList<Term> terms = new ArrayList<>();
     public final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_DATE_FORMAT);
-    public SimpleDateFormat sdfNoTime = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat sdfNoTime = new SimpleDateFormat("yyyy-MM-dd");
 
     private ListView termListView;
 
@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         courses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: fix this
-                Intent courseIntent = new Intent(MainActivity.this, EditTermActivity.class);
+                Intent courseIntent = new Intent(MainActivity.this, CourseList.class);
                 startActivity(courseIntent);
             }
         });
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent mentorIntent = new Intent(MainActivity.this, MentorList.class);
-                mentorIntent.putExtra(ViewCourseActivity.COURSE_ID, -1);
+                //mentorIntent.putExtra(CourseDetails.COURSE_ID, -1);
                 startActivity(mentorIntent);
             }
         });
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
         int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
         //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
-        CursorAdapter cursAdaptor = new TermCursorAdapter(this, cursor);
+        CursorAdapter cursAdaptor = new CursorAdapterTerm(this, cursor);
         termListView.setAdapter(cursAdaptor);
 
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -202,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 int courseID = Integer.parseInt(insertedCourse.getLastPathSegment());
 
                 for (int n = 0; n < notesMaxRandom; n++){
-                    //notes.put(DBOpenHelper.START_DATE, "TODO");
-                    //notes.put(DBOpenHelper.END_DATE, "TODO");
+
                     notes.put(DBOpenHelper.TITLE, "Note for Course "+courseID + " Note # "+n);
                     notes.put(DBOpenHelper.NOTE_TEXT, loremIpsem);
                     notes.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);

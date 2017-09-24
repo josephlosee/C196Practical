@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,8 +31,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import static android.R.attr.id;
 
 public class NoteDetails extends AppCompatActivity {
 
@@ -69,7 +65,7 @@ public class NoteDetails extends AppCompatActivity {
 
         if (noteExtras != null){
 
-            noteID = noteExtras.getLong(ViewCourseActivity.NOTE_ID);
+            noteID = noteExtras.getLong(CourseDetails.NOTE_ID);
 
             etTitle = (EditText)findViewById(R.id.etNoteTitle);
             etContent = (EditText) findViewById(R.id.etNoteContent);

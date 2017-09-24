@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
@@ -19,9 +20,8 @@ import java.util.Date;
 
 /**
  * Created by Joe on 9/12/2017.
+ * Significantly modified from https://stackoverflow.com/questions/36902667/how-to-schedule-notification-in-android
  */
-
-//TODO: update credit to https://stackoverflow.com/questions/36902667/how-to-schedule-notification-in-android
 
 /**
  * When the alarm fires, this WakefulBroadcastReceiver receives the broadcast Intent
@@ -108,17 +108,12 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
 
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id, intent, 0);
 
-        //TODO: Use passed in calendar after this is finished being tested.
-        Calendar calendar = Calendar.getInstance();
-        /// this is unnecessary , will remove later: calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 20);
-        //ALWAYS recompute the calendar after using add, set, roll
+        if (targetAlarmTime != null) {
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, targetAlarmTime.getTimeInMillis(), alarmIntent);
+        }
+        MainActivity.sdfNoTime.setCalendar(targetAlarmTime);
 
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-
-        // Enable {@code BootReceiver} to automatically restart when the
-        // device is rebooted.
-       //// TODO: you may need to reference the context by ApplicationActivity.class, probably not?
+        // Enable {@code BootReceiver} to automatically restart when the device is rebooted.
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
         //receiver.
         PackageManager pm = context.getPackageManager();
@@ -143,11 +138,7 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
         if (alarmIntent!=null){
             mAlarmManager.cancel(alarmIntent);
         }
-
-
-        // Disable {@code BootReceiver} so that it doesn't automatically restart when the device is rebooted.
-        //// TODO: you may need to reference the context by ApplicationActivity.class
-        //TODO DO I?
+        // Disable BootReceiver so that it doesn't automatically restart when the device is rebooted.
         ComponentName receiver = new ComponentName(context, BootReceiver.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,

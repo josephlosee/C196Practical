@@ -3,9 +3,11 @@ package edu.jlosee.c196practical;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -24,6 +26,8 @@ public class CourseList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Course List");
 
         courseList=(ListView)findViewById(R.id.courseList);
 
@@ -36,9 +40,9 @@ public class CourseList extends AppCompatActivity {
 
             String where;
             String [] whereArgs = {String.valueOf(termID)};
+
             if (remove){
                 where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_TERM+"=?";
-
             }else{
                 where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_TERM+"!=?";
                 courseCursor = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, where, whereArgs, null);
@@ -46,15 +50,20 @@ public class CourseList extends AppCompatActivity {
             }
             courseCursor = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, where, whereArgs, null);
         }else{
-            //TODO: get a cursor of all courses
             courseCursor = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, null, null, null);
             //Assume we're looking for all courses and set the list view to show all courses.
         }
 
         setCourseListView();
 
-        //TODO: Add FAB for adding a course
-        //TODO: set the course list
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent courseIntent = new Intent(CourseList.this, CourseDetails.class);
+                startActivity(courseIntent);
+            }
+        });
     }
 
     private void setCourseListView(){
@@ -69,8 +78,8 @@ public class CourseList extends AppCompatActivity {
             courseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Intent courseIntent = new Intent(CourseList.this, ViewCourseActivity.class);
-                    courseIntent.putExtra(ViewCourseActivity.COURSE_ID, id);
+                    Intent courseIntent = new Intent(CourseList.this, CourseDetails.class);
+                    courseIntent.putExtra(CourseDetails.COURSE_ID, id);
                     startActivity(courseIntent);
                 }
             });

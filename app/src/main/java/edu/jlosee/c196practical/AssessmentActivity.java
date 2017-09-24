@@ -1,9 +1,7 @@
 package edu.jlosee.c196practical;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -31,7 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static edu.jlosee.c196practical.ViewCourseActivity.NOTE_ID;
+import static edu.jlosee.c196practical.CourseDetails.NOTE_ID;
 
 public class AssessmentActivity extends AppCompatActivity {
 
@@ -44,6 +42,7 @@ public class AssessmentActivity extends AppCompatActivity {
     private Switch alertToggle;
     private WakefulReceiver alertReceiver = new WakefulReceiver();
     private long courseID;
+    private String courseTitle, courseCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class AssessmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assessment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Assessment Details");
 
         //Get all the references to the widgets
         etTitle = (EditText)findViewById(R.id.etAssessmentTitle);
@@ -59,17 +59,15 @@ public class AssessmentActivity extends AppCompatActivity {
         objectiveRadio = (RadioButton)findViewById(R.id.objButton);
         alertToggle = (Switch)findViewById(R.id.assessmentAlertSwitch);
 
-        //TODO: get information from the db to set items.
-
         //Fill all the information
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
             assessmentID = extras.getLong(AssessmentActivity.ASSESSMENT_ID);
-            courseID = extras.getLong(ViewCourseActivity.COURSE_ID);
+            courseID = extras.getLong(CourseDetails.COURSE_ID);
             if(assessmentID!=-1){
                 String idQuery = "where _id = ?";
                 String[] idArg = {String.valueOf(assessmentID)};
-
+                String[] courseIDArg = {String.valueOf(courseID)};
                 Cursor assessmentInfo = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, idQuery, idArg, null);
 
                 if (assessmentInfo != null && assessmentInfo.moveToFirst()) {
@@ -114,6 +112,7 @@ public class AssessmentActivity extends AppCompatActivity {
         content.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, objectiveRadio.isChecked());
         content.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
         content.put(DBOpenHelper.END_ALARM, alarmState);
+
         if (assessmentID == -1){
             //if we don't have an assessment id, must be a new assessment
             Uri insertUri = MainActivity.dbProvider.insert(DBProvider.ASSESSMENT_URI, content);
@@ -142,13 +141,20 @@ public class AssessmentActivity extends AppCompatActivity {
             Calendar alarmCal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
+
+
                 sdf.parse(etDueDate.getText().toString());
                 alarmCal = sdf.getCalendar();
                 alertReceiver.setAlarm(this,
                         alarmCal,
-                        "Reminder: You have an assessment today for course ",
+                        this.alarmMessage(),
                         AssessmentActivity.class,
                         (int)assessmentID);
+                //TEST SNACKBAR
+                Snackbar.make(this.getCurrentFocus(),
+                        "Notification alert set for "+ MainActivity.sdfNoTime.toPattern(),
+                        Snackbar.LENGTH_SHORT).show();
+
             } catch (ParseException e) {
                 Snackbar.make(this.getCurrentFocus(), "Enter a valid due date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
@@ -161,6 +167,36 @@ public class AssessmentActivity extends AppCompatActivity {
             alertReceiver.cancelAlarm(this, (int)assessmentID);
         }
 
+    }
+
+    /**
+     * Builds the alarmMessage with the course title
+     * @return
+     */
+    private String alarmMessage(){
+        if (courseCode!=null || courseTitle!=null){
+            String idQuery = "where _id = ?";
+            //String[] idArg = {String.valueOf(assessmentID)};
+            String[] courseIDArg = {String.valueOf(courseID)};
+
+            Cursor courseInfo = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, idQuery, courseIDArg, null);
+            if (courseInfo!=null && courseInfo.moveToFirst()){
+                courseTitle = courseInfo.getString(courseInfo.getColumnIndex(DBOpenHelper.COURSE_CODE));
+                courseCode = courseInfo.getString(courseInfo.getColumnIndex(DBOpenHelper.TITLE));
+            }
+        }
+        StringBuilder alarmMessage = new StringBuilder("Reminder: You have an ");
+        if (objectiveRadio.isChecked()){
+            alarmMessage.append("objective assessment today for course ");
+
+        }else{
+            alarmMessage.append("performance assessment today for course ");
+        }
+        alarmMessage.append(this.courseCode);
+        alarmMessage.append(" ");
+        alarmMessage.append(this.courseTitle);
+
+        return alarmMessage.toString();
     }
 
     @Override
@@ -213,7 +249,6 @@ public class AssessmentActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     /**
      * Deletes the current assessment
      */
@@ -246,41 +281,28 @@ public class AssessmentActivity extends AppCompatActivity {
                 Intent selectedItemIntent = new Intent(AssessmentActivity.this, NoteDetails.class);
                 selectedItemIntent.putExtra(NOTE_ID, id);
                 selectedItemIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, assessmentID);
-                //Todo: flag for assessment notes
                 startActivity(selectedItemIntent);
             }
         });
     }
 
+    public void endDateCalendar(View view) {
+        SimpleDateFormat sdfNoTime = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            sdfNoTime.parse(this.etDueDate.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar endCal = sdfNoTime.getCalendar();
+
+        new DatePickerDialog(AssessmentActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        etDueDate.setText(""+year+"-"+month+"-"+day);
+                    }}, endCal.get(Calendar.YEAR),
+                endCal.get(Calendar.MONTH),
+                endCal.get(Calendar.DAY_OF_MONTH)).show();
+    }
 }//END OF CLASS
-
-/*
-        // Instantiate a Builder object.
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_stat_name);
-        // Creates an Intent for the Activity
-        Intent notifyIntent =
-                new Intent(this, AssessmentActivity.class);
-        // Sets the Activity to start in a new, empty task
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        // Creates the PendingIntent
-        //PendingIntent.get
-        PendingIntent notifyPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        notifyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-        // Puts the PendingIntent into the notification builder
-        builder.setContentIntent(notifyPendingIntent);
-        // Notifications are issued by sending them to the
-        // NotificationManager system service.
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // Builds an anonymous Notification object from the builder, and
-        // passes it to the NotificationManager
-        int id = 66525;
-        mNotificationManager.notify(id, builder.build());*/

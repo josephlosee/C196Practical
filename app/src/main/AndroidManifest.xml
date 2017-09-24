@@ -55,17 +55,8 @@
         </provider>
 
         <activity
-            android:name=".EditTermActivity"
+            android:name=".TermDetails"
             android:label="@string/title_activity_create_term"
-            android:parentActivityName=".TermListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.MainActivity" />
-        </activity>
-        <activity
-            android:name=".TermDetailsActivity"
-            android:label="@string/title_activity_view_term"
             android:parentActivityName=".TermListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -75,7 +66,7 @@
         <activity
             android:name=".NoteListActivity"
             android:label="@string/title_activity_note"
-            android:parentActivityName=".ViewCourseActivity"
+            android:parentActivityName=".CourseDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -84,14 +75,14 @@
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessment"
-            android:parentActivityName=".ViewCourseActivity"
+            android:parentActivityName=".CourseDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.jlosee.c196practical.TermDetailsActivity" />
         </activity>
         <activity
-            android:name=".ViewCourseActivity"
+            android:name=".CourseDetails"
             android:label="@string/title_activity_view_course"
             android:parentActivityName=".TermDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
