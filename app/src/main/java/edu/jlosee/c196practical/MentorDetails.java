@@ -25,6 +25,7 @@ public class MentorDetails extends AppCompatActivity {
         setContentView(R.layout.activity_mentor_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.setTitle("Mentor Details");
 
         etMentorName = (EditText)findViewById(R.id.etName);
         etMentorPhone = (EditText)findViewById(R.id.etPhone);

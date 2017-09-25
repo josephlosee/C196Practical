@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -21,6 +22,7 @@ public class CourseList extends AppCompatActivity {
     private ListView courseList;
     private boolean remove;
     Cursor courseCursor;
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +33,26 @@ public class CourseList extends AppCompatActivity {
 
         courseList=(ListView)findViewById(R.id.courseList);
 
-        Bundle extras = getIntent().getExtras();
 
+        extras = getIntent().getExtras();
+
+
+
+        setCourseListView();
+
+        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent courseIntent = new Intent(CourseList.this, CourseDetails.class);
+                startActivityForResult(courseIntent, 12345);
+            }
+        });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setCourseListView(){
         if (extras!=null){
             termID = extras.getLong(MainActivity.TERM_ID);
 
@@ -54,20 +74,6 @@ public class CourseList extends AppCompatActivity {
             //Assume we're looking for all courses and set the list view to show all courses.
         }
 
-        setCourseListView();
-
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent courseIntent = new Intent(CourseList.this, CourseDetails.class);
-                startActivity(courseIntent);
-            }
-        });
-    }
-
-    private void setCourseListView(){
-
         String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
         int[] to = {android.R.id.text1};
         CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, courseCursor, from, to, 0);
@@ -80,7 +86,7 @@ public class CourseList extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Intent courseIntent = new Intent(CourseList.this, CourseDetails.class);
                     courseIntent.putExtra(CourseDetails.COURSE_ID, id);
-                    startActivity(courseIntent);
+                    startActivityForResult(courseIntent, 12345);
                 }
             });
         }else if(remove) {
@@ -108,8 +114,6 @@ public class CourseList extends AppCompatActivity {
                     CourseList.this.refreshCursor();
                 }
             });
-            //add the course, display a snackbar indicating it, and update the list
-
         }
     }
 
@@ -124,7 +128,25 @@ public class CourseList extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setCourseListView();
         super.onActivityResult(requestCode, resultCode, data);
-        refreshCursor();
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        setCourseListView();
+        super.onActivityReenter(resultCode, data);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                this.onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }//End of class

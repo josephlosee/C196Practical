@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        menu.add(Menu.NONE, TESTID, Menu.NONE, "test");
+        //menu.add(Menu.NONE, TESTID, Menu.NONE, "test");
         menu.add(Menu.NONE, FILL_WITH_TEST_DATA_ID, Menu.NONE, "Test Data");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -143,14 +144,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id){
-            case R.id.action_settings:
-                //do nothing
+            case R.id.credit:
+
+                Snackbar.make(getWindow().getDecorView(),
+                        "Student Scheduler - C196 Practical Assessment written by Joseph Losee",
+                        Snackbar.LENGTH_LONG).show();
                 break;
             case FILL_WITH_TEST_DATA_ID:
                 this.debugDBInfo(this.dbProvider);
                 break;
-            case TESTID:
-                break;
+            /*case TESTID:
+                break;*/
             default:
                 break;
         }
@@ -178,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             end.add(Calendar.MONTH, 3*t+1);
             term.put(DBOpenHelper.TITLE, "Term "+(t+1));
             term.put(DBOpenHelper.START_DATE, sdfNoTime.format(start.getTime()));
-            term.put(DBOpenHelper.END_DATE, sdfNoTime.format(start.getTime()));
+            term.put(DBOpenHelper.END_DATE, sdfNoTime.format(end.getTime()));
 
             Uri insertedTerm = provider.insert(DBProvider.TERM_URI, term);
             int termID = Integer.parseInt(insertedTerm.getLastPathSegment());
@@ -187,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
             for (int c = 0; c < 5; c++){
                 String courseCode = "T"+t+"C"+c+"0";
 
-                course.put(DBOpenHelper.START_DATE, "TODO");
-                course.put(DBOpenHelper.END_DATE, "TODO");
+                course.put(DBOpenHelper.START_DATE, sdfNoTime.format(start.getTime()));
+                course.put(DBOpenHelper.END_DATE, sdfNoTime.format(end.getTime()));
                 course.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_TERM, termID);
                 course.put(DBOpenHelper.COURSE_CODE, courseCode);
                 course.put(DBOpenHelper.TITLE, "Course Title" + courseCode);
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
                     provider.insert(DBProvider.NOTES_URI, notes);
 
-                    assessment.put(DBOpenHelper.ASSESSMENT_DUE_DATE, "TODO");
+                    assessment.put(DBOpenHelper.ASSESSMENT_DUE_DATE, sdfNoTime.format(end.getTime()));
                     assessment.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, false);
                     assessment.put(DBOpenHelper.ASSESSMENT_TARGET_SCORE, 65);
                     assessment.put(DBOpenHelper.ASSESSMENT_EARNED_SCORE, 0);

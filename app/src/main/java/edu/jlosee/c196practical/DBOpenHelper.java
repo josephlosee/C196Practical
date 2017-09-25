@@ -15,8 +15,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     //public constant for a join:
     public static final String MENTOR_JOIN_QUERY = "Select * from Mentor join CourseMentors on Mentor._id = CourseMentors._idMentor where CourseMentors._idCourse = ?";
-    public static final String MENTORS_NOT_IN_COURSE_QUERY = "Select Distinct Mentor._id, Mentor.name, Mentor.email, Mentor.phone from Mentor join CourseMentors on Mentor._id = CourseMentors._idMentor where CourseMentors._idCourse != ?";
-
+    //public static final String MENTORS_NOT_IN_COURSE_QUERY = "Select Distinct Mentor._id, Mentor.name, Mentor.email, Mentor.phone from CourseMentors join Mentor on Mentor._id = CourseMentors._idMentor where CourseMentors._idCourse!=?";
+    public static final String MENTORS_NOT_IN_COURSE2 = "Select * from Mentor where _id not in (";//NOTE: NEEDS APPENDING OF LIST + )
     //Constants for identifying table and columns
     public static final String TABLE_NOTES = "CourseNotes";
     public static final String TABLE_COURSE = "Course";

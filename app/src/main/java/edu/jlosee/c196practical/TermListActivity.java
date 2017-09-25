@@ -27,28 +27,13 @@ public class TermListActivity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent termDetails = new Intent(TermListActivity.this, TermDetails.class);
+                startActivity(termDetails);
             }
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-/*
-        cursorAdapter = new CursorAdapterTerm(this, null);
-        termListView = (ListView)findViewById(R.id.lvTermsSummary);
-        termListView.setAdapter(cursorAdapter);
 
-        termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                Intent intent = new Intent(TermListActivity.this, TermDetailsActivity.class);
-
-                Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
-                //TESTING long l as IDd
-                intent.putExtra(MainActivity.TERM_ID, id);
-                startActivity(intent);
-            }
-        });*/
         setTermListView();
     }
 
@@ -75,14 +60,9 @@ public class TermListActivity extends AppCompatActivity{
 
         Cursor cursor = MainActivity.dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
 
-        //Unused, using a custom cursor adapter now:
-        //String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
-        //int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
-        //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
         this.cursorAdapter = new CursorAdapterTerm(this, cursor);
 
         termListView.setAdapter(cursorAdapter);
-
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -91,7 +71,6 @@ public class TermListActivity extends AppCompatActivity{
                 Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
 
                 intent.putExtra(MainActivity.TERM_ID, id);
-                //intent.putExtra(BOOL_ISCOURSENOTE, true);
 
                 startActivity(intent);
             }

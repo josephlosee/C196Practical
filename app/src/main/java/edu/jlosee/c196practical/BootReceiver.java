@@ -33,7 +33,7 @@ public class BootReceiver extends BroadcastReceiver {
             Cursor termAlarms = MainActivity.dbProvider.query(DBProvider.TERM_URI, null, hasAlarm, alarmStatus, null);
 
             if (assessmentAlarms!=null && assessmentAlarms.moveToFirst()){
-                while(assessmentAlarms.moveToNext()){
+                do{
                     WakefulReceiver alarmReceiver = new WakefulReceiver();
 
                     //Get the relevant information
@@ -55,11 +55,11 @@ public class BootReceiver extends BroadcastReceiver {
                     long assessmentID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
 
                     alarmReceiver.setAlarm(context, time, alarmMessage, AssessmentActivity.class, (int)assessmentID);
-                }
+                }while(assessmentAlarms.moveToNext());
             }
 
             if (termAlarms!=null && termAlarms.moveToFirst()){
-                while(termAlarms.moveToNext()){
+                do{
                     WakefulReceiver alarmReceiver = new WakefulReceiver();
 
                     //Get the relevant information
@@ -81,7 +81,7 @@ public class BootReceiver extends BroadcastReceiver {
                     long termID = termAlarms.getLong(termAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
 
                     alarmReceiver.setAlarm(context, time, alarmMessage, TermDetails.class, (int)termID);
-                }
+                }while(termAlarms.moveToNext());
             }
         }
     }//end of onReceive

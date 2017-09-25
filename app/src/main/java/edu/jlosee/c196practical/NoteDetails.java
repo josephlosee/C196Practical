@@ -158,7 +158,14 @@ public class NoteDetails extends AppCompatActivity {
             ContentValues noteImageValues = new ContentValues();
             noteImageValues.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_NOTES, noteID);
             noteImageValues.put(DBOpenHelper.NOTE_IMAGE_URI, contentUri.toString());
-            MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, noteImageValues);
+            Uri imageUri = MainActivity.dbProvider.insert(DBProvider.NOTE_IMAGE_URI, noteImageValues);
+            if (imageUri != null) {
+                long id = Long.parseLong(imageUri.getLastPathSegment());
+                noteImagesAdapter.add(contentUri, id);
+            }
+
+
+            noteImagesAdapter.notifyDataSetChanged();
         }
     }
 

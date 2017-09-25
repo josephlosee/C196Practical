@@ -15,30 +15,30 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="135dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:gravity="bottom"
         android:onClick="courseNotesClicked"
         android:text="Notes"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/termEnd" />
 
     <Button
         android:id="@+id/courseAssessmentButton"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="135dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:gravity="bottom"
         android:onClick="courseAssessmentsClicked"
         android:text="Assessments"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/courseNotesButton" />
+        app:layout_constraintLeft_toRightOf="@+id/courseNotesButton"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/termEnd" />
 
     <EditText
         android:id="@+id/termStart"
@@ -234,10 +234,11 @@
 
     <Button
         android:id="@+id/removeMentor"
-        android:layout_width="@dimen/calendarButtonSquare"
-        android:layout_height="@dimen/calendarButtonSquare"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="-5dp"
         android:background="@android:drawable/ic_delete"
         android:onClick="removeMentorClicked"
         app:layout_constraintLeft_toRightOf="@+id/addMentor"
@@ -245,8 +246,8 @@
 
     <Button
         android:id="@+id/addMentor"
-        android:layout_width="@dimen/calendarButtonSquare"
-        android:layout_height="@dimen/calendarButtonSquare"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:background="@android:drawable/ic_input_add"
@@ -256,11 +257,11 @@
 
     <ListView
         android:id="@+id/mentorList"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="120dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:visibility="visible"

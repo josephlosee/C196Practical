@@ -10,8 +10,11 @@
 
     <ListView
         android:id="@+id/lvTermsSummary"
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 </android.support.constraint.ConstraintLayout>

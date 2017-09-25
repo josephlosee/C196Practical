@@ -300,7 +300,7 @@ public class AssessmentActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        etDueDate.setText(""+year+"-"+month+"-"+day);
+                        etDueDate.setText(""+year+"-"+(month+1)+"-"+day);
                     }}, endCal.get(Calendar.YEAR),
                 endCal.get(Calendar.MONTH),
                 endCal.get(Calendar.DAY_OF_MONTH)).show();

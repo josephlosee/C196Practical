@@ -101,7 +101,7 @@ public class DBProvider{//} extends ContentProvider {
                 ret = database.query(DBOpenHelper.TABLE_MENTOR, columns, selection, selectionArgs, null, null, DBOpenHelper.MENTOR_NAME+" ASC");
                 break;
             case COURSE_MENTORS:
-                ret = database.query(DBOpenHelper.TABLE_COURSE_MENTORS, columns, selection, selectionArgs, null, null, DBOpenHelper.MENTOR_NAME+ " ASC");
+                ret = database.query(DBOpenHelper.TABLE_COURSE_MENTORS, columns, selection, selectionArgs, null, null, null);
             default:
                 Log.d("DBProvider", "No match found for URI: "+uri.toString());
                 break;

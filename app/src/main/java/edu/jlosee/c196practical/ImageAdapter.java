@@ -16,6 +16,8 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Joe on 8/16/2017.
@@ -66,8 +68,6 @@ public class ImageAdapter extends BaseAdapter {
 
         ImageView imageView;
 
-
-
         if (view == null) {
             imageView = new ImageView(context);
 
@@ -78,10 +78,7 @@ public class ImageAdapter extends BaseAdapter {
 
         } else {
             imageView = (ImageView) view;
-            //imageView.setLayoutParams(new GridView.LayoutParams(dpWidthInPx, dpHeightInPx));
-            //imageView.setAdjustViewBounds(true);
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            //imageView.setPadding(10, 10, 10, 10);
+
         }
 
         //Get the relevant bitmap
@@ -110,12 +107,12 @@ public class ImageAdapter extends BaseAdapter {
     public void setCursor(Cursor imageCursor) {
         if (imageCursor != null) {
             if (imageCursor.moveToFirst()) {
-                while (imageCursor.moveToNext()) {
+                do {
                     String imgURI = imageCursor.getString(imageCursor.getColumnIndex(DBOpenHelper.NOTE_IMAGE_URI));
                     long imgId = imageCursor.getInt(imageCursor.getColumnIndex(DBOpenHelper.TABLE_ID));
                     NoteImage img = new NoteImage(Uri.parse(imgURI), imgId);
                     imageList.add(img);
-                }
+                }while (imageCursor.moveToNext());
             }
         }
     }
@@ -149,8 +146,6 @@ public class ImageAdapter extends BaseAdapter {
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds =false;
         bmOptions.inSampleSize =scaleFactor;
-        //bmOptions.inPurgeable =true;
-
 
         //Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
@@ -158,7 +153,11 @@ public class ImageAdapter extends BaseAdapter {
         mImageView.setContentDescription(imagePath);
     }
 
-    public class NoteImage {
+    public void add(Uri contentUri, long id) {
+        imageList.add(new NoteImage(contentUri, id));
+    }
+
+    public static class NoteImage {
         Uri imgUri;
         long id;
         //Bitmap image;

@@ -19,7 +19,6 @@ import android.widget.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.SimpleFormatter;
 
 public class TermDetails extends AppCompatActivity {
 
@@ -45,7 +44,7 @@ public class TermDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_term);
+        setContentView(R.layout.activity_term_details);
 
         //Get all the references to the views
         termTitle = (EditText) findViewById(R.id.termTitle);
@@ -83,6 +82,7 @@ public class TermDetails extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Term Details");
 
         //Start Date Dialog Picker setup
         final DatePickerDialog.OnDateSetListener startDate = new DatePickerDialog.OnDateSetListener() {
@@ -130,7 +130,6 @@ public class TermDetails extends AppCompatActivity {
             }
         });
 
-        //TODO: change to save button icon?
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,12 +223,13 @@ public class TermDetails extends AppCompatActivity {
         String start = termStart.getText().toString();
         String end = termEnd.getText().toString();
 
-        Snackbar.make(this.getCurrentFocus(), "Title: "+title+ " start: " + start + " end: " +end, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        /*Snackbar.make(this.getCurrentFocus(), "Title: "+title+ " start: " + start + " end: " +end, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();*/
 
         boolean startAlarm = this.startAlarmSwitch.isChecked();
         boolean endAlarm = this.endAlarmSwitch.isChecked();
 
+        //Save all the current values
         ContentValues termInfo = new ContentValues();
         termInfo.put(DBOpenHelper.TITLE, title);
         termInfo.put(DBOpenHelper.START_DATE, start);
@@ -348,15 +348,10 @@ public class TermDetails extends AppCompatActivity {
         });
     }
 
-    private void refreshCourseList(){
-        courseCursor.requery();
-        String[] from = {DBOpenHelper.TITLE};
-        int[] to = {android.R.id.text1};
-        CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, courseCursor, from, to, 0);
-
-        courseList.setAdapter(cursAdaptor);
-    }
-
+    /**
+     * Calls the course list of courses currently assigned to the term
+     * @param view
+     */
     public void removeCourseClicked(View view) {
         save();
         Intent removeCourseIntent = new Intent(this, CourseList.class);
@@ -365,6 +360,10 @@ public class TermDetails extends AppCompatActivity {
         startActivity(removeCourseIntent);
     }
 
+    /**
+     * Calls the course list of courses not currently assigned to the term
+     * @param view
+     */
     public void addCourseClicked(View view) {
         save();
         Intent addCourseIntent = new Intent(this, CourseList.class);
@@ -375,8 +374,14 @@ public class TermDetails extends AppCompatActivity {
 
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
+        setCourseListView();
         super.onActivityReenter(resultCode, data);
-        refreshCourseList();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setCourseListView();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void startDateCalendar(View view) {
@@ -385,6 +390,7 @@ public class TermDetails extends AppCompatActivity {
         try {
             sdfNoTime.parse(this.termStart.getText().toString());
         } catch (ParseException e) {
+            sdfNoTime.setCalendar(Calendar.getInstance());
             e.printStackTrace();
         }
         Calendar startCal = sdfNoTime.getCalendar();
@@ -393,7 +399,7 @@ public class TermDetails extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        termEnd.setText(""+year+"-"+month+"-"+day);
+                        termStart.setText(""+year+"-"+(month+1)+"-"+day);
                     }}, startCal.get(Calendar.YEAR),
                 startCal.get(Calendar.MONTH),
                 startCal.get(Calendar.DAY_OF_MONTH)).show();
@@ -403,9 +409,9 @@ public class TermDetails extends AppCompatActivity {
         SimpleDateFormat sdfNoTime = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
-            sdfNoTime.parse(this.termEnd
-                    .getText().toString());
+            sdfNoTime.parse(this.termEnd.getText().toString());
         } catch (ParseException e) {
+            sdfNoTime.setCalendar(Calendar.getInstance());
             e.printStackTrace();
         }
         Calendar endCal = sdfNoTime.getCalendar();
@@ -414,7 +420,7 @@ public class TermDetails extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                termEnd.setText(""+year+"-"+month+"-"+day);
+                termEnd.setText(""+year+"-"+(month+1)+"-"+day);
                 }}, endCal.get(Calendar.YEAR),
                 endCal.get(Calendar.MONTH),
                 endCal.get(Calendar.DAY_OF_MONTH)).show();

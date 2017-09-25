@@ -14,10 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -62,12 +64,10 @@ public class CourseDetails extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         courseStatus.setAdapter(adapter);
-        //courseStatus.setAdapter();
 
         if (bundle!=null){
             courseID = bundle.getLong(CourseDetails.COURSE_ID);
 
-            //String[] columns = {DBOpenHelper.TABLE_ID, DBOpenHelper.TITLE};
             String selection = DBOpenHelper.TABLE_ID+"=?";
             String[] selectionArgs = {String.valueOf(courseID)};
 
@@ -91,14 +91,7 @@ public class CourseDetails extends AppCompatActivity {
 
             }
 
-            String[]joinArgs = {String.valueOf(courseID)};
-            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, joinArgs);
-//            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor where _idCourse=?;", joinArgs);
-
-            mentorList = (ListView)findViewById(R.id.mentorList);
-            CursorAdapter mentorAdapter = new CursorAdapterMentor(this, mentorsCursor);
-
-            mentorList.setAdapter(mentorAdapter);
+            setMentorCourseList();
         }
 
         toolbar.inflateMenu(R.menu.delete_only);
@@ -113,9 +106,48 @@ public class CourseDetails extends AppCompatActivity {
 
     }
 
+    private void setMentorCourseList() {
+
+        String[]joinArgs = {String.valueOf(courseID)};
+        Cursor mentorsCursor = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, joinArgs);
+//            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor where _idCourse=?;", joinArgs);
+
+        mentorList = (ListView)findViewById(R.id.mentorList);
+        CursorAdapter mentorAdapter = new CursorAdapterMentor(this, mentorsCursor);
+
+        mentorList.setAdapter(mentorAdapter);
+        mentorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent mentorIntent = new Intent(CourseDetails.this, MentorDetails.class);
+                String where = DBOpenHelper.TABLE_ID+"=?";
+                String[] whereArgs = {String.valueOf(l)};
+                Cursor mentorInfo = MainActivity.dbProvider.query(DBProvider.COURSE_MENTORS_URI, null, where, whereArgs, null);
+                if (mentorInfo!=null && mentorInfo.moveToFirst()){
+                    long mentorID = mentorInfo.getLong(mentorInfo.getColumnIndex(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR));
+                    mentorIntent.putExtra(MentorDetails.MENTOR_ID, mentorID);
+                    startActivityForResult(mentorIntent, 12345);
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        setMentorCourseList();
+        super.onActivityReenter(resultCode, data);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setMentorCourseList();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_editsavecancel, menu);
+        getMenuInflater().inflate(R.menu.delete_only, menu);
         return true;
     }
 
@@ -185,17 +217,17 @@ public class CourseDetails extends AppCompatActivity {
         Intent addMentorIntent = new Intent(this, MentorList.class);
         addMentorIntent.putExtra(COURSE_ID, this.courseID);
         addMentorIntent.putExtra(MentorList.FLAG_REMOVE, false);
-        startActivity(addMentorIntent);
+        startActivityForResult(addMentorIntent, 12345);
     }
 
     /**
      * Starts the Mentor List activity to remove mentors from this course
      */
     public void removeMentorClicked(View view) {
-        Intent addMentorIntent = new Intent(this, MentorList.class);
-        addMentorIntent.putExtra(COURSE_ID, this.courseID);
-        addMentorIntent.putExtra(MentorList.FLAG_REMOVE, true);
-        startActivity(addMentorIntent);
+        Intent removeMentorIntent = new Intent(this, MentorList.class);
+        removeMentorIntent.putExtra(COURSE_ID, this.courseID);
+        removeMentorIntent.putExtra(MentorList.FLAG_REMOVE, true);
+        startActivityForResult(removeMentorIntent, 12345);
     }
 
     /**
@@ -241,7 +273,7 @@ public class CourseDetails extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        etStartDate.setText(""+year+"-"+month+"-"+day);
+                        etStartDate.setText(""+year+"-"+(month+1)+"-"+day);
                     }}, startCal.get(Calendar.YEAR),
                 startCal.get(Calendar.MONTH),
                 startCal.get(Calendar.DAY_OF_MONTH)).show();
@@ -270,7 +302,7 @@ public class CourseDetails extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        etEndDate.setText(""+year+"-"+month+"-"+day);
+                        etEndDate.setText(""+year+"-"+(month+1)+"-"+day);
                     }}, endCal.get(Calendar.YEAR),
                 endCal.get(Calendar.MONTH),
                 endCal.get(Calendar.DAY_OF_MONTH)).show();

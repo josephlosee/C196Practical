@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="edu.jlosee.c196practical.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/credit"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/credit"
         app:showAsAction="never" />
 </menu>

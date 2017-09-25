@@ -70,7 +70,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
+                android:value="edu.jlosee.c196practical.TermDetails" />
         </activity>
         <activity
             android:name=".AssessmentActivity"
@@ -79,21 +79,20 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
+                android:value="edu.jlosee.c196practical.TermDetails" />
         </activity>
         <activity
             android:name=".CourseDetails"
             android:label="@string/title_activity_view_course"
-            android:parentActivityName=".TermDetailsActivity"
+            android:parentActivityName=".TermDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.TermDetailsActivity" />
+                android:value="edu.jlosee.c196practical.TermDetails" />
         </activity>
         <activity
             android:name=".MentorList"
             android:label="@string/title_activity_view_mentors"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TermListActivity"
