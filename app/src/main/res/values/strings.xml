@@ -114,6 +114,7 @@ Mauris mauris sapien, luctus a porttitor quis, rutrum ut lacus. Donec eget leo s
     <string name="remindMe">Remind Me</string>
     <string name="title_activity_mentor_details">MentorDetails</string>
     <string name="credit">Credit</string>
+    <string name="clear_data">Clear Data</string>
 
     <string-array name="course_status">
         <item>Pending</item>

@@ -276,11 +276,11 @@ public class TermDetails extends AppCompatActivity {
                 alarmCal = sdf.getCalendar();
                 startReceiver.setAlarm(this,
                         alarmCal,
-                        "Reminder: Your term "+termTitle+ " is starting today! ",
+                        "Reminder: Your term "+termTitle.getText().toString()+ " is starting today! ",
                         TermDetails.class,
                         (int)termID);
             } catch (ParseException e) {
-                Snackbar.make(this.getCurrentFocus(), "Enter a valid start date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
+                Snackbar.make(getWindow().getDecorView(), "Enter a valid start date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
 
                 e.printStackTrace();
@@ -306,11 +306,11 @@ public class TermDetails extends AppCompatActivity {
                 alarmCal = sdf.getCalendar();
                 endReceiver.setAlarm(this,
                         alarmCal,
-                        "Reminder: Your term "+termTitle+ " is ending today! ",
+                        "Reminder: Your term "+termTitle.getText().toString()+ " is ending today! ",
                         TermDetails.class,
                         (int)termID);
             } catch (ParseException e) {
-                Snackbar.make(this.getCurrentFocus(), "Enter a valid end date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
+                Snackbar.make(getWindow().getDecorView(), "Enter a valid end date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
 
                 e.printStackTrace();

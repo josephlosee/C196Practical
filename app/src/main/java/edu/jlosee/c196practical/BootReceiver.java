@@ -17,8 +17,13 @@ import java.util.Locale;
  */
 
 public class BootReceiver extends BroadcastReceiver {
+    private Cursor assessmentAlarms;
+    Context context;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        this.context = context;
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             //context = MainActivity.getApplicationContect();
@@ -26,63 +31,21 @@ public class BootReceiver extends BroadcastReceiver {
             Intent renewIntent = new Intent(context, WakefulReceiver.class);
             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-            String hasAlarm = "where hasAlarm=?";// and alarmTime>?";
+            String hasAlarm = DBOpenHelper.END_ALARM+"=?;// and alarmTime>?";
             String[] alarmStatus = {String.valueOf(1)};//1==true
 
-            Cursor assessmentAlarms = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, hasAlarm, alarmStatus, null);
+            assessmentAlarms = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, hasAlarm, alarmStatus, null);
+            createAssessmentAlarms();
+
+            //Slight change to the query and value
+            hasAlarm = DBOpenHelper.END_ALARM+"=? or "+DBOpenHelper.START_ALARM+"=?";// and alarmTime>?";
+            alarmStatus = new String[]{String.valueOf(1), String.valueOf(1)};//1==true
+
             Cursor termAlarms = MainActivity.dbProvider.query(DBProvider.TERM_URI, null, hasAlarm, alarmStatus, null);
+            createStartAndEndAlarms(termAlarms, TermDetails.class, DBOpenHelper.TABLE_TERM);
 
-            if (assessmentAlarms!=null && assessmentAlarms.moveToFirst()){
-                do{
-                    WakefulReceiver alarmReceiver = new WakefulReceiver();
-
-                    //Get the relevant information
-                    String alarmTime = assessmentAlarms.getString(assessmentAlarms.getColumnIndex(DBOpenHelper.END_DATE));
-                    long courseID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE));
-                    boolean objective = assessmentAlarms.getInt(assessmentAlarms.getColumnIndex(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE))==1;
-
-                    String alarmMessage = alarmAssessmentMessage(courseID, objective);
-                    Calendar time = Calendar.getInstance();
-                    Locale current = context.getResources().getConfiguration().locale;
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", current);
-                    try {
-                        sdf.parse(alarmTime);
-                        time = sdf.getCalendar();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    //time.setTimeInMillis(alarmTime);
-                    long assessmentID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
-
-                    alarmReceiver.setAlarm(context, time, alarmMessage, AssessmentActivity.class, (int)assessmentID);
-                }while(assessmentAlarms.moveToNext());
-            }
-
-            if (termAlarms!=null && termAlarms.moveToFirst()){
-                do{
-                    WakefulReceiver alarmReceiver = new WakefulReceiver();
-
-                    //Get the relevant information
-                    String alarmTime = termAlarms.getString(termAlarms.getColumnIndex(DBOpenHelper.END_DATE));
-                    //long courseID = termAlarms.getLong(termAlarms.getColumnIndex(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE));
-                    boolean objective = termAlarms.getInt(termAlarms.getColumnIndex(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE))==1;
-                    String termTitle = termAlarms.getString(termAlarms.getColumnIndex(DBOpenHelper.TITLE));
-                    String alarmMessage = "Reminder: Your term "+termTitle+ " is ending today! ";
-                    Calendar time = Calendar.getInstance();
-                    Locale current = context.getResources().getConfiguration().locale;
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", current);
-                    try {
-                        sdf.parse(alarmTime);
-                        time = sdf.getCalendar();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    //time.setTimeInMillis(alarmTime);
-                    long termID = termAlarms.getLong(termAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
-
-                    alarmReceiver.setAlarm(context, time, alarmMessage, TermDetails.class, (int)termID);
-                }while(termAlarms.moveToNext());
-            }
+            Cursor courseAlarms = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, hasAlarm, alarmStatus, null);
+            createStartAndEndAlarms(courseAlarms, CourseDetails.class, DBOpenHelper.TABLE_COURSE);
         }
     }//end of onReceive
 
@@ -116,6 +79,92 @@ public class BootReceiver extends BroadcastReceiver {
         alarmMessage.append(courseTitle);
 
         return alarmMessage.toString();
+    }
+
+    private void createAssessmentAlarms(){
+        if (assessmentAlarms!=null && assessmentAlarms.moveToFirst()){
+            do{
+                WakefulReceiver alarmReceiver = new WakefulReceiver();
+
+                //Get the relevant information
+                String alarmTime = assessmentAlarms.getString(assessmentAlarms.getColumnIndex(DBOpenHelper.END_DATE));
+                long courseID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE));
+                boolean objective = assessmentAlarms.getInt(assessmentAlarms.getColumnIndex(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE))==1;
+
+                String alarmMessage = alarmAssessmentMessage(courseID, objective);
+                Calendar time = Calendar.getInstance();
+                Locale current = context.getResources().getConfiguration().locale;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", current);
+                try {
+                    sdf.parse(alarmTime);
+                    time = sdf.getCalendar();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //time.setTimeInMillis(alarmTime);
+                long assessmentID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
+
+                alarmReceiver.setAlarm(context, time, alarmMessage, AssessmentActivity.class, (int)assessmentID);
+            }while(assessmentAlarms.moveToNext());
+        }
+    }
+
+    /**
+     *
+     * @param cursorWithTwoAlarms - Cursor with start and end alarms
+     * @param reminderType
+     */
+    private void createStartAndEndAlarms(Cursor cursorWithTwoAlarms, Class<?> targetClass, String reminderType){
+        if (cursorWithTwoAlarms!=null && cursorWithTwoAlarms.moveToFirst()){
+            do{
+                boolean hasStart = cursorWithTwoAlarms.getInt(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.START_ALARM))==1;
+                boolean hasEnd = cursorWithTwoAlarms.getInt(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.END_ALARM))==1;
+                String title = cursorWithTwoAlarms.getString(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.TITLE));
+                long id = cursorWithTwoAlarms.getLong(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
+
+                if(hasEnd) {
+                    WakefulReceiver alarmReceiver = new WakefulReceiver();
+                    //Get the relevant information
+                    String alarmTime = cursorWithTwoAlarms.getString(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.END_DATE));
+                    //long courseID = termAlarms.getLong(termAlarms.getColumnIndex(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE));
+
+
+                    String alarmMessage = "Reminder: Your "+reminderType+" " + title + " is ending today! ";
+                    Calendar time = Calendar.getInstance();
+                    Locale current = context.getResources().getConfiguration().locale;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", current);
+                    try {
+                        sdf.parse(alarmTime);
+                        time = sdf.getCalendar();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    //time.setTimeInMillis(alarmTime);
+
+                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, (int) id);
+                }
+                if (hasStart){
+
+                    WakefulReceiver alarmReceiver = new WakefulReceiver();
+                    //Get the relevant information
+                    String alarmTime = cursorWithTwoAlarms.getString(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.START_DATE));
+
+                    String alarmMessage = "Reminder: Your "+reminderType+" " + title + " is ending today! ";
+                    Calendar time = Calendar.getInstance();
+                    Locale current = context.getResources().getConfiguration().locale;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", current);
+                    try {
+                        sdf.parse(alarmTime);
+                        time = sdf.getCalendar();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    //time.setTimeInMillis(alarmTime);
+
+                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, (int) id);
+                }
+            }while(cursorWithTwoAlarms.moveToNext());
+        }
     }
 
 }//END OF CLASS

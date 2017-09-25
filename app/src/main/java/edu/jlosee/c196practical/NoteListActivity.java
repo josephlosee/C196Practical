@@ -112,13 +112,14 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void setAssessmentList(){
+        this.setTitle("Assessments");
         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
         String[] whereArgs = {String.valueOf(courseID)};
 
         notes = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, where, whereArgs, null);
 
-        String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
-        int[] to = {android.R.id.text1};
+        String[] from = {DBOpenHelper.TITLE, DBOpenHelper.ASSESSMENT_DUE_DATE};// + " " + DBOpenHelper.COURSE_CODE};
+        int[] to = {android.R.id.text1, android.R.id.text1};
 
         cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
                 notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);

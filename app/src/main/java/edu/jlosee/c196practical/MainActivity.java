@@ -1,12 +1,14 @@
 package edu.jlosee.c196practical;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -51,18 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
         ConstraintLayout maincontent = (ConstraintLayout)findViewById(R.id.mainContent);
         LinearLayout navButtons = (LinearLayout)findViewById(R.id.navButtons);
-                //new LinearLayout(this);
-
-        /*LinearLayout.LayoutParams loParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        loParams.setMargins(marginPX, marginPX, marginPX, marginPX);
-        loParams.gravity=Gravity.CENTER_VERTICAL;
-        navButtons.setOrientation(LinearLayout.VERTICAL);
-        navButtons.setLayoutParams(loParams);
-
-        navButtons.setHorizontalGravity(Gravity.CENTER);
-        navButtons.setGravity(Gravity.CENTER);
-
-        navButtons.setVerticalGravity(Gravity.CENTER);*/
 
         //Setup buttons
         Button terms = new Button(this);
@@ -105,27 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    public void setTermListView(){
-        termListView = (ListView)findViewById(R.id.termList);
-
-        Cursor cursor = dbProvider.query(DBProvider.TERM_URI, DBOpenHelper.ALL_TERM_COLS, null, null, null);
-        String[] from = {DBOpenHelper.TITLE};//, DBOpenHelper.START_DATE, DBOpenHelper.END_DATE};
-        int[] to = {android.R.id.text1};//, android.R.id.text1, android.R.id.text1};
-        //CursorAdapter cursAdaptor = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
-        CursorAdapter cursAdaptor = new CursorAdapterTerm(this, cursor);
-        termListView.setAdapter(cursAdaptor);
-
-        termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, TermDetailsActivity.class);
-                intent.putExtra(TERM_ID, id);
-                startActivity(intent);
-            }
-        });
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -151,14 +120,39 @@ public class MainActivity extends AppCompatActivity {
                         Snackbar.LENGTH_LONG).show();
                 break;
             case FILL_WITH_TEST_DATA_ID:
-                this.debugDBInfo(this.dbProvider);
+                this.debugDBInfo(dbProvider);
                 break;
-            /*case TESTID:
-                break;*/
+            case R.id.clearData:
+                alertDeleteConfirmation();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void alertDeleteConfirmation(){
+        //boolean ret = false;
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setMessage("Delete ALL DATA? This action cannot be undone.");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Snackbar.make(getWindow().getDecorView(), "OK selected", Snackbar.LENGTH_LONG).show();
+                //ret=true;
+                clearData();
+            }
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Snackbar.make(getWindow().getDecorView(), "Cancel selected", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        alertDialog.show();
+    }
+    private void clearData() {
+        dbProvider.wipeDatabase();
     }
 
     public void debugDBInfo(DBProvider provider){
@@ -185,7 +179,10 @@ public class MainActivity extends AppCompatActivity {
             term.put(DBOpenHelper.END_DATE, sdfNoTime.format(end.getTime()));
 
             Uri insertedTerm = provider.insert(DBProvider.TERM_URI, term);
-            int termID = Integer.parseInt(insertedTerm.getLastPathSegment());
+            int termID =-1;
+            if (insertedTerm != null) {
+                termID = Integer.parseInt(insertedTerm.getLastPathSegment());
+            }
 
             //Fill in courses
             for (int c = 0; c < 5; c++){
@@ -224,28 +221,9 @@ public class MainActivity extends AppCompatActivity {
                     courseMentors.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR, n);
 
                     provider.insert(DBProvider.COURSE_MENTORS_URI, courseMentors);
-
-                    /*
-                        private static final String ASSESSMENT_CREATE =
-            "CREATE TABLE " + TABLE_ASSESSMENT + " (" +
-                    TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ASSESSMENT_DUE_DATE + " TEXT, "+
-                    ASSESSMENT_IS_OBJECTIVE + " BOOLEAN, "+
-                    ASSESSMENT_TARGET_SCORE + " INTEGER," +
-                    ASSESSMENT_EARNED_SCORE + " INTEGER," +
-                    TABLE_ID+TABLE_COURSE + " INTEGER, " +
-                    "FOREIGN KEY (" + TABLE_ID+TABLE_COURSE + ") REFERENCES " +TABLE_COURSE + " ("+TABLE_ID+ "))";
-                     */
                 }
             }
-
-            //mentor.clear();
-
-            //
-
         }
-
-        //setTermListView();
     }
 
     /**

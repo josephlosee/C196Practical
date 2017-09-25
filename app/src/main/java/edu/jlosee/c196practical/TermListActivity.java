@@ -22,6 +22,8 @@ public class TermListActivity extends AppCompatActivity{
         setContentView(R.layout.activity_term_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.setTitle("Term List");
+        toolbar.setTitle("Term List");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

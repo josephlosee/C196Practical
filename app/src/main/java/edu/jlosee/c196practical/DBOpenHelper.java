@@ -75,6 +75,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     START_DATE + " TEXT, "+
                     END_DATE + " TEXT, "+
                     COURSE_STATUS + " INTEGER, " +
+                    START_ALARM + " BOOLEAN, " +
+                    END_ALARM + " BOOLEAN, " +
                     TABLE_ID+TABLE_TERM + " INTEGER, " +
                     "FOREIGN KEY(" + TABLE_ID+TABLE_TERM + ") REFERENCES " +TABLE_TERM + " ("+TABLE_ID+ "))";
     //Course complete

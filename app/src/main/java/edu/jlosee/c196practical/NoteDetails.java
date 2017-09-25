@@ -208,9 +208,7 @@ public class NoteDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                saveNote();
-                //noteImagesAdapter.imageList.clear(); //Do i need this?
-                this.finish();
+                this.onBackPressed();
                 break;
             case R.id.action_delete:
                 alertConfirmation();

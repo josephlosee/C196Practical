@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         android:title="@string/credit"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/clearData"
+        android:orderInCategory="100"
+        android:title="@string/clear_data"
+        app:showAsAction="never" />
 </menu>

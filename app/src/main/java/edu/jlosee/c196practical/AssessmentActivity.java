@@ -212,8 +212,7 @@ public class AssessmentActivity extends AppCompatActivity {
 
         switch(id){
             case(android.R.id.home):
-                saveAssessment();
-                this.finish();
+                onBackPressed();
                 break;
             case(R.id.action_delete):
                 alertDeleteConfirmation();
