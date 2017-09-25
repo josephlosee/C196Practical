@@ -187,12 +187,12 @@ public class MainActivity extends AppCompatActivity {
             //Fill in courses
             for (int c = 0; c < 5; c++){
                 String courseCode = "T"+t+"C"+c+"0";
-
+                String courseTitle = "Course" + courseCode+"Title";
                 course.put(DBOpenHelper.START_DATE, sdfNoTime.format(start.getTime()));
                 course.put(DBOpenHelper.END_DATE, sdfNoTime.format(end.getTime()));
                 course.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_TERM, termID);
                 course.put(DBOpenHelper.COURSE_CODE, courseCode);
-                course.put(DBOpenHelper.TITLE, "Course Title" + courseCode);
+                course.put(DBOpenHelper.TITLE, courseTitle);
                 course.put(DBOpenHelper.COURSE_STATUS, "Started");
                 course.put(DBOpenHelper.COURSE_DESCRIPTION, loremIpsem);
 
@@ -210,12 +210,24 @@ public class MainActivity extends AppCompatActivity {
                     provider.insert(DBProvider.NOTES_URI, notes);
 
                     assessment.put(DBOpenHelper.ASSESSMENT_DUE_DATE, sdfNoTime.format(end.getTime()));
+                    assessment.put(DBOpenHelper.TITLE, courseCode +" Perf Assessment");
                     assessment.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, false);
                     assessment.put(DBOpenHelper.ASSESSMENT_TARGET_SCORE, 65);
                     assessment.put(DBOpenHelper.ASSESSMENT_EARNED_SCORE, 0);
                     assessment.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
 
                     provider.insert(DBProvider.ASSESSMENT_URI, assessment);
+
+                    ContentValues objassessment = new ContentValues();
+
+                    objassessment.put(DBOpenHelper.ASSESSMENT_DUE_DATE, sdfNoTime.format(end.getTime()));
+                    objassessment.put(DBOpenHelper.TITLE, courseCode +" Obj Assessment");
+                    objassessment.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, true);
+                    objassessment.put(DBOpenHelper.ASSESSMENT_TARGET_SCORE, 65);
+                    objassessment.put(DBOpenHelper.ASSESSMENT_EARNED_SCORE, 0);
+                    objassessment.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
+
+                    provider.insert(DBProvider.ASSESSMENT_URI, objassessment);
 
                     courseMentors.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
                     courseMentors.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR, n);

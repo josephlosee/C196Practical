@@ -65,7 +65,7 @@ public class AssessmentActivity extends AppCompatActivity {
             assessmentID = extras.getLong(AssessmentActivity.ASSESSMENT_ID);
             courseID = extras.getLong(CourseDetails.COURSE_ID);
             if(assessmentID!=-1){
-                String idQuery = "where _id = ?";
+                String idQuery = DBOpenHelper.TABLE_ID+"= ?";
                 String[] idArg = {String.valueOf(assessmentID)};
                 String[] courseIDArg = {String.valueOf(courseID)};
                 Cursor assessmentInfo = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, idQuery, idArg, null);
@@ -101,13 +101,14 @@ public class AssessmentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         saveAssessment();
-        this.finish();
+        super.onBackPressed();
     }
 
     //Save the assessment information and finish
     public void saveAssessment(){
         boolean alarmState = this.alertToggle.isChecked();
         ContentValues content = new ContentValues();
+        content.put(DBOpenHelper.TITLE, etTitle.getText().toString());
         content.put(DBOpenHelper.ASSESSMENT_DUE_DATE, etDueDate.getText().toString());
         content.put(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE, objectiveRadio.isChecked());
         content.put(DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE, courseID);
@@ -141,8 +142,6 @@ public class AssessmentActivity extends AppCompatActivity {
             Calendar alarmCal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-
-
                 sdf.parse(etDueDate.getText().toString());
                 alarmCal = sdf.getCalendar();
                 alertReceiver.setAlarm(this,
@@ -151,12 +150,12 @@ public class AssessmentActivity extends AppCompatActivity {
                         AssessmentActivity.class,
                         (int)assessmentID);
                 //TEST SNACKBAR
-                Snackbar.make(this.getCurrentFocus(),
-                        "Notification alert set for "+ MainActivity.sdfNoTime.toPattern(),
+                Snackbar.make(getWindow().getDecorView(),
+                        "Notification alert set for "+ MainActivity.sdfNoTime.toString(),
                         Snackbar.LENGTH_SHORT).show();
 
             } catch (ParseException e) {
-                Snackbar.make(this.getCurrentFocus(), "Enter a valid due date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
+                Snackbar.make(getWindow().getDecorView(), "Enter a valid due date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
 
                 e.printStackTrace();
