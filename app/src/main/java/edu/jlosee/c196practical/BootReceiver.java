@@ -42,10 +42,12 @@ public class BootReceiver extends BroadcastReceiver {
             alarmStatus = new String[]{String.valueOf(1), String.valueOf(1)};//1==true
 
             Cursor termAlarms = MainActivity.dbProvider.query(DBProvider.TERM_URI, null, hasAlarm, alarmStatus, null);
-            createStartAndEndAlarms(termAlarms, TermDetails.class, DBOpenHelper.TABLE_TERM);
+            createStartAndEndAlarms(termAlarms, TermDetails.class, DBOpenHelper.TABLE_TERM,
+                    TermDetails.TERM_START_PREFIX, TermDetails.TERM_END_PREFIX);
 
             Cursor courseAlarms = MainActivity.dbProvider.query(DBProvider.COURSE_URI, null, hasAlarm, alarmStatus, null);
-            createStartAndEndAlarms(courseAlarms, CourseDetails.class, DBOpenHelper.TABLE_COURSE);
+            createStartAndEndAlarms(courseAlarms, CourseDetails.class, DBOpenHelper.TABLE_COURSE,
+                    CourseDetails.COURSE_START_PREFIX, CourseDetails.COURSE_END_PREFIX);
         }
     }//end of onReceive
 
@@ -56,7 +58,7 @@ public class BootReceiver extends BroadcastReceiver {
     private String alarmAssessmentMessage(long courseID, boolean isObjective){
         String courseCode = "Missing Course Code";
         String courseTitle = "Missing Course Title";
-        String idQuery = "where _id = ?";
+        String idQuery = "_id = ?";
 
         String[] courseIDArg = {String.valueOf(courseID)};
 
@@ -67,14 +69,15 @@ public class BootReceiver extends BroadcastReceiver {
             courseCode = courseInfo.getString(courseInfo.getColumnIndex(DBOpenHelper.TITLE));
         }
 
-        StringBuilder alarmMessage = new StringBuilder("Reminder: You have an ");
+        StringBuilder alarmMessage = new StringBuilder("Reminder: ");
+        alarmMessage.append(courseCode);
         if (isObjective){
-            alarmMessage.append("objective assessment today for course ");
+            alarmMessage.append("objective assessment today!");
 
         }else{
-            alarmMessage.append("performance assessment today for course ");
+            alarmMessage.append("performance assessment today!");
         }
-        alarmMessage.append(courseCode);
+
         alarmMessage.append(" ");
         alarmMessage.append(courseTitle);
 
@@ -104,7 +107,8 @@ public class BootReceiver extends BroadcastReceiver {
                 //time.setTimeInMillis(alarmTime);
                 long assessmentID = assessmentAlarms.getLong(assessmentAlarms.getColumnIndex(DBOpenHelper.TABLE_ID));
 
-                alarmReceiver.setAlarm(context, time, alarmMessage, AssessmentActivity.class, (int)assessmentID);
+                alarmReceiver.setAlarm(context, time, alarmMessage, AssessmentActivity.class,
+                        (int)assessmentID+AssessmentActivity.ASSESSMENT_END_PREFIX);
             }while(assessmentAlarms.moveToNext());
         }
     }
@@ -114,7 +118,8 @@ public class BootReceiver extends BroadcastReceiver {
      * @param cursorWithTwoAlarms - Cursor with start and end alarms
      * @param reminderType
      */
-    private void createStartAndEndAlarms(Cursor cursorWithTwoAlarms, Class<?> targetClass, String reminderType){
+    private void createStartAndEndAlarms(Cursor cursorWithTwoAlarms, Class<?> targetClass,
+                                         String reminderType, int startIDPrefix, int endIDPrefix){
         if (cursorWithTwoAlarms!=null && cursorWithTwoAlarms.moveToFirst()){
             do{
                 boolean hasStart = cursorWithTwoAlarms.getInt(cursorWithTwoAlarms.getColumnIndex(DBOpenHelper.START_ALARM))==1;
@@ -141,7 +146,7 @@ public class BootReceiver extends BroadcastReceiver {
                     }
                     //time.setTimeInMillis(alarmTime);
 
-                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, (int) id);
+                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, ((int) id+endIDPrefix));
                 }
                 if (hasStart){
 
@@ -161,7 +166,7 @@ public class BootReceiver extends BroadcastReceiver {
                     }
                     //time.setTimeInMillis(alarmTime);
 
-                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, (int) id);
+                    alarmReceiver.setAlarm(context, time, alarmMessage, targetClass, ((int) id+startIDPrefix));
                 }
             }while(cursorWithTwoAlarms.moveToNext());
         }

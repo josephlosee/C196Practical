@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.jlosee.c196practical">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-        <uses-feature
-            android:name="android.hardware.camera"
-            android:required="true" />
 
         <activity
             android:name=".MainActivity"
@@ -35,15 +37,6 @@
             </intent-filter>
         </receiver>
 
-        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-        <!--
-           <provider
-            android:name=".DBProvider"
-            android:authorities="edu.jlosee.c196practical.dbprovider"
-            android:exported="false" />
-        -->
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="edu.jlosee.fileprovider"
@@ -56,17 +49,15 @@
 
         <activity
             android:name=".TermDetails"
-            android:label="@string/title_activity_create_term"
-            android:parentActivityName=".TermListActivity"
+            android:label="@string/term_details"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.MainActivity" />
+                android:value="edu.jlosee.c196practical.TermListActivity" />
         </activity>
         <activity
             android:name=".NoteListActivity"
             android:label="@string/title_activity_note"
-            android:parentActivityName=".CourseDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -75,7 +66,6 @@
         <activity
             android:name=".AssessmentActivity"
             android:label="@string/title_activity_assessment"
-            android:parentActivityName=".CourseDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -84,7 +74,6 @@
         <activity
             android:name=".CourseDetails"
             android:label="@string/title_activity_view_course"
-            android:parentActivityName=".TermDetails"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -97,7 +86,6 @@
         <activity
             android:name=".TermListActivity"
             android:label="@string/title_activity_term_list"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -108,11 +96,11 @@
             android:label="@string/title_activity_note_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NoteImageView" />
-        <activity android:name=".CourseList" />
+        <activity android:name=".CourseList"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".MentorDetails"
             android:label="@string/title_activity_mentor_details"
-            android:parentActivityName=".MentorList"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -33,6 +33,7 @@ import static edu.jlosee.c196practical.CourseDetails.NOTE_ID;
 
 public class AssessmentActivity extends AppCompatActivity {
 
+    public static final int ASSESSMENT_END_PREFIX = 900000;
     public static final String ASSESSMENT_ID = "assessmentID";
     private long assessmentID = -1; //flag value
     EditText etDueDate, etTitle;
@@ -78,6 +79,7 @@ public class AssessmentActivity extends AppCompatActivity {
                     alertToggle.setChecked(alarm);
                     boolean objective = (assessmentInfo.getInt(assessmentInfo.getColumnIndex(DBOpenHelper.ASSESSMENT_IS_OBJECTIVE)) == 1);
                     objectiveRadio.setChecked(objective);
+                    performanceRadio.setChecked(!objective);
                 }
 
                 setNoteList();
@@ -148,7 +150,7 @@ public class AssessmentActivity extends AppCompatActivity {
                         alarmCal,
                         this.alarmMessage(),
                         AssessmentActivity.class,
-                        (int)assessmentID);
+                        ASSESSMENT_END_PREFIX+(int)assessmentID);
                 //TEST SNACKBAR
                 Snackbar.make(getWindow().getDecorView(),
                         "Notification alert set for "+ MainActivity.sdfNoTime.toString(),
@@ -174,7 +176,7 @@ public class AssessmentActivity extends AppCompatActivity {
      */
     private String alarmMessage(){
         if (courseCode!=null || courseTitle!=null){
-            String idQuery = "where _id = ?";
+            String idQuery = DBOpenHelper.TABLE_ID+"= ?";
             //String[] idArg = {String.valueOf(assessmentID)};
             String[] courseIDArg = {String.valueOf(courseID)};
 
@@ -184,14 +186,15 @@ public class AssessmentActivity extends AppCompatActivity {
                 courseCode = courseInfo.getString(courseInfo.getColumnIndex(DBOpenHelper.TITLE));
             }
         }
-        StringBuilder alarmMessage = new StringBuilder("Reminder: You have an ");
+        StringBuilder alarmMessage = new StringBuilder("Reminder: ");
+        alarmMessage.append(this.courseCode);
         if (objectiveRadio.isChecked()){
-            alarmMessage.append("objective assessment today for course ");
+            alarmMessage.append("objective assessment today!");
 
         }else{
-            alarmMessage.append("performance assessment today for course ");
+            alarmMessage.append("performance assessment today!");
         }
-        alarmMessage.append(this.courseCode);
+
         alarmMessage.append(" ");
         alarmMessage.append(this.courseTitle);
 

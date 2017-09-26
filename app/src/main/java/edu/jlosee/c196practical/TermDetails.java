@@ -22,6 +22,8 @@ import java.util.Calendar;
 
 public class TermDetails extends AppCompatActivity {
 
+    public static final int TERM_START_PREFIX = 400000;
+    public static final int TERM_END_PREFIX = 500000;
     //private Term newOrEditedTerm;
     private ListView courseList;
 
@@ -278,7 +280,7 @@ public class TermDetails extends AppCompatActivity {
                         alarmCal,
                         "Reminder: Your term "+termTitle.getText().toString()+ " is starting today! ",
                         TermDetails.class,
-                        (int)termID);
+                        TERM_START_PREFIX+(int)termID);
             } catch (ParseException e) {
                 Snackbar.make(getWindow().getDecorView(), "Enter a valid start date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
@@ -288,7 +290,7 @@ public class TermDetails extends AppCompatActivity {
 
         }else{
             //Doubt this cast will ever be a problem
-            startReceiver.cancelAlarm(this, (int)termID);
+            startReceiver.cancelAlarm(this, TERM_START_PREFIX+(int)termID);
         }
     }
 
@@ -308,7 +310,7 @@ public class TermDetails extends AppCompatActivity {
                         alarmCal,
                         "Reminder: Your term "+termTitle.getText().toString()+ " is ending today! ",
                         TermDetails.class,
-                        (int)termID);
+                        TERM_END_PREFIX+(int)termID);
             } catch (ParseException e) {
                 Snackbar.make(getWindow().getDecorView(), "Enter a valid end date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
@@ -318,7 +320,7 @@ public class TermDetails extends AppCompatActivity {
 
         }else{
             //Doubt this cast will ever be a problem
-            endReceiver.cancelAlarm(this, (int)termID);
+            endReceiver.cancelAlarm(this, TERM_END_PREFIX+(int)termID);
         }
     }
 
@@ -373,15 +375,9 @@ public class TermDetails extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        setCourseListView();
-        super.onActivityReenter(resultCode, data);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setCourseListView();
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void startDateCalendar(View view) {

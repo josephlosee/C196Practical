@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +35,8 @@ public class CourseDetails extends AppCompatActivity {
     public static final String COURSE_ID = "courseID";
     private long courseID = -1;
     public static final String NOTE_ID = "noteID";
+    public static final int COURSE_START_PREFIX = 700000;
+    public static final int COURSE_END_PREFIX = 800000;
 
     //WIDGETS
     private EditText etCode;
@@ -178,8 +181,8 @@ public class CourseDetails extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case android.R.id.home:
-                saveCourse();
-                super.onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                this.onBackPressed();
                 break;
             case R.id.action_delete:
                 alertDeleteConfirmation();
@@ -220,7 +223,8 @@ public class CourseDetails extends AppCompatActivity {
         String delete = DBOpenHelper.TABLE_ID+"=?";
         String[] vals = {String.valueOf(this.courseID)};
         MainActivity.dbProvider.delete(DBProvider.COURSE_URI, delete, vals);
-        startReceiver.cancelAlarm(this, (int)courseID);
+        startReceiver.cancelAlarm(this, ((int)courseID+COURSE_START_PREFIX));
+        endReceiver.cancelAlarm(this, ((int)courseID+COURSE_END_PREFIX));
         this.finish();
     }
 
@@ -250,10 +254,19 @@ public class CourseDetails extends AppCompatActivity {
      * @param view
      */
     public void courseAssessmentsClicked(View view) {
-        Intent assessmentIntent = new Intent(this, NoteListActivity.class);
-        assessmentIntent.putExtra(COURSE_ID, this.courseID);
-        assessmentIntent.putExtra(IS_ASSESSMENT, true);
-        startActivity(assessmentIntent);
+        String title = etTitle.getText().toString();
+        String code =  etCode.getText().toString();
+        String description = etDesc.getText().toString();
+        if (courseID==-1 && (title.isEmpty() & code.isEmpty() & description.isEmpty())) {
+            Snackbar.make(getWindow().getDecorView(),
+                    "Enter a course title, code, or description before entering notes or assessments.",
+                    Snackbar.LENGTH_LONG);
+        }else {
+            Intent assessmentIntent = new Intent(this, NoteListActivity.class);
+            assessmentIntent.putExtra(COURSE_ID, this.courseID);
+            assessmentIntent.putExtra(IS_ASSESSMENT, true);
+            startActivity(assessmentIntent);
+        }
     }
 
     /**
@@ -261,9 +274,20 @@ public class CourseDetails extends AppCompatActivity {
      * @param view
      */
     public void courseNotesClicked(View view) {
-        Intent noteIntent = new Intent(this, NoteListActivity.class);
-        noteIntent.putExtra(CourseDetails.COURSE_ID, this.courseID);
-        startActivity(noteIntent);
+        String title = etTitle.getText().toString();
+        String code =  etCode.getText().toString();
+        String description = etDesc.getText().toString();
+        if (courseID==-1 && (title.isEmpty() & code.isEmpty() & description.isEmpty())){
+            Snackbar.make(getWindow().getDecorView(),
+                    "Enter a course title, code, or description before entering notes or assessments.",
+                    Snackbar.LENGTH_LONG);
+        }else{
+            saveCourse();
+            Intent noteIntent = new Intent(this, NoteListActivity.class);
+            noteIntent.putExtra(CourseDetails.COURSE_ID, this.courseID);
+            startActivity(noteIntent);
+        }
+
     }
 
     /**
@@ -327,9 +351,14 @@ public class CourseDetails extends AppCompatActivity {
         boolean startAlarm = this.startAlarmSwitch.isChecked();
         boolean endAlarm = this.endAlarmSwitch.isChecked();
 
+        String title = etTitle.getText().toString();
+        String code =  etCode.getText().toString();
+        String description = etDesc.getText().toString();
+
         ContentValues courseInfo = new ContentValues();
-        courseInfo.put(DBOpenHelper.TITLE, etTitle.getText().toString());
-        courseInfo.put(DBOpenHelper.COURSE_CODE, etCode.getText().toString());
+        courseInfo.put(DBOpenHelper.TITLE, title);
+        courseInfo.put(DBOpenHelper.COURSE_CODE, code);
+        courseInfo.put(DBOpenHelper.COURSE_DESCRIPTION, description);
         courseInfo.put(DBOpenHelper.START_DATE, etStartDate.getText().toString());
         courseInfo.put(DBOpenHelper.END_DATE, etEndDate.getText().toString());
         courseInfo.put(DBOpenHelper.COURSE_STATUS, courseStatus.getSelectedItemPosition());
@@ -337,9 +366,15 @@ public class CourseDetails extends AppCompatActivity {
         courseInfo.put(DBOpenHelper.END_ALARM, endAlarm);
 
         if (courseID==-1){
-            Uri insertUri = MainActivity.dbProvider.insert(DBProvider.COURSE_URI, courseInfo);
-            if (insertUri!=null){
-                this.courseID=Long.parseLong(insertUri.getLastPathSegment());
+            //Sanity check to avoid a bunch of blank courses
+            if (!(title.isEmpty() & code.isEmpty() & description.isEmpty())){
+                Uri insertUri = MainActivity.dbProvider.insert(DBProvider.COURSE_URI, courseInfo);
+                if (insertUri!=null){
+                    this.courseID=Long.parseLong(insertUri.getLastPathSegment());
+                }
+            }else{
+                Snackbar.make(getWindow().getDecorView(), "Course title, code, and description are blank. Discarding new course.",
+                        Snackbar.LENGTH_LONG);
             }
         }else{
             String where = DBOpenHelper.TABLE_ID+"=?";
@@ -351,7 +386,7 @@ public class CourseDetails extends AppCompatActivity {
     public void endAlarmToggled(View view) {
         Switch alert = (Switch)view;
         saveCourse();
-        Log.d("EditTerm", "Toggled switch to "+alert.isChecked());
+        Log.d("CourseDetails", "Toggled switch to "+alert.isChecked());
 
         //Set or cancel the alarm depending on if the toggle is now checked.
         if (alert.isChecked()){
@@ -362,26 +397,24 @@ public class CourseDetails extends AppCompatActivity {
                 alarmCal = sdf.getCalendar();
                 endReceiver.setAlarm(this,
                         alarmCal,
-                        "Reminder: Your term "+etTitle.getText().toString()+ " is ending today! ",
-                        TermDetails.class,
-                        (int)courseID);
+                        "Reminder: Your course "+etTitle.getText().toString()+ " is ending today! ",
+                        CourseDetails.class,
+                        ((int)courseID+COURSE_END_PREFIX));
             } catch (ParseException e) {
                 Snackbar.make(getWindow().getDecorView(), "Enter a valid end date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
                         .show();
-
                 e.printStackTrace();
             }
-
         }else{
             //Doubt this cast will ever be a problem
-            endReceiver.cancelAlarm(this, (int)courseID);
+            endReceiver.cancelAlarm(this,  ((int)courseID+COURSE_END_PREFIX));
         }
     }
 
     public void startAlarmToggled(View view){
         Switch alert = (Switch)view;
         saveCourse();
-        Log.d("EditTerm", "Toggled switch to "+alert.isChecked());
+        Log.d("CourseDetail", "Toggled switch to "+alert.isChecked());
 
         //Set or cancel the alarm depending on if the toggle is now checked.
         if (alert.isChecked()){
@@ -392,8 +425,8 @@ public class CourseDetails extends AppCompatActivity {
                 alarmCal = sdf.getCalendar();
                 startReceiver.setAlarm(this,
                         alarmCal,
-                        "Reminder: Your term "+etTitle.getText().toString()+ " is starting today! ",
-                        TermDetails.class,
+                        "Reminder: Your course "+etTitle.getText().toString()+ " is starting today! ",
+                        CourseDetails.class,
                         (int)courseID);
             } catch (ParseException e) {
                 Snackbar.make(getWindow().getDecorView(), "Enter a valid end date with format YYYY-MM-DD.", Snackbar.LENGTH_LONG)
@@ -404,7 +437,7 @@ public class CourseDetails extends AppCompatActivity {
 
         }else{
             //Doubt this cast will ever be a problem
-            startReceiver.cancelAlarm(this, (int)courseID);
+            startReceiver.cancelAlarm(this, ((int)courseID+COURSE_START_PREFIX));
         }
     }
 }//End of Class

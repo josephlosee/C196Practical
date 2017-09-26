@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="edu.jlosee.c196practical.CourseDetails"
+    tools:showIn="@layout/activity_course_details"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <ScrollView
+        android:layout_width="667dp"
+        android:layout_height="275dp"
+        android:scrollbarStyle="insideInset"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <ListView
+                android:id="@+id/mentorList"
+                android:layout_width="240dp"
+                android:layout_height="155dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/courseAssessmentButton"
+                app:layout_constraintLeft_toRightOf="@+id/startDateButton"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addMentor"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <EditText
+                android:id="@+id/termStart"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/start_date"
+                android:inputType="date"
+                app:layout_constraintLeft_toLeftOf="@+id/statusText"
+                app:layout_constraintTop_toBottomOf="@+id/statusText" />
+
+            <TextView
+                android:id="@+id/tvCourseCode"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:inputType="none"
+                android:text="@string/code"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/etCourseCode"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:enabled="true"
+                android:hint="@string/code"
+                android:inputType="textPersonName"
+                app:layout_constraintLeft_toRightOf="@+id/tvCourseCode"
+                app:layout_constraintTop_toTopOf="@+id/tvCourseCode" />
+
+            <Button
+                android:id="@+id/startDateButton"
+                android:layout_width="@dimen/calendarButtonSquare"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:background="@android:drawable/ic_menu_today"
+                android:onClick="startDateCalendar"
+                app:layout_constraintLeft_toRightOf="@+id/termStart"
+                app:layout_constraintTop_toTopOf="@+id/termStart" />
+
+            <Button
+                android:id="@+id/endDateButton"
+                android:layout_width="@dimen/calendarButtonSquare"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:background="@android:drawable/ic_menu_today"
+                android:onClick="endDateCalendar"
+                app:layout_constraintLeft_toRightOf="@+id/termEnd"
+                app:layout_constraintTop_toTopOf="@+id/termEnd" />
+
+            <TextView
+                android:id="@+id/tvCourseTitle"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:inputType="none"
+                android:text="@string/title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCourseCode" />
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="181dp"
+                android:layout_height="152dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="2.25"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:text="@string/lorem_ipsem"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <EditText
+                android:id="@+id/termEnd"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/end_date"
+                android:inputType="date"
+                app:layout_constraintLeft_toLeftOf="@+id/termStart"
+                app:layout_constraintTop_toBottomOf="@+id/startAlarmSwitch"
+                tools:layout_constraintTop_creator="1" />
+
+            <Button
+                android:id="@+id/addMentor"
+                android:layout_width="@dimen/calendarButtonSquare"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:drawable/ic_input_add"
+                android:onClick="addMentorClicked"
+                app:layout_constraintLeft_toRightOf="@+id/tvMentor"
+                app:layout_constraintTop_toTopOf="@+id/tvMentor" />
+
+            <TextView
+                android:id="@+id/tvMentor"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Mentors"
+                android:textSize="20sp"
+                app:layout_constraintLeft_toLeftOf="@+id/mentorList"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="136dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:dropDownWidth="match_parent"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toRightOf="@+id/statusText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/removeMentor"
+                android:layout_width="@dimen/calendarButtonSquare"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:drawable/ic_delete"
+                android:onClick="removeMentorClicked"
+                app:layout_constraintLeft_toRightOf="@+id/addMentor"
+                app:layout_constraintTop_toTopOf="@+id/tvMentor" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/status"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                app:layout_constraintLeft_toRightOf="@+id/etCourseCode"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/courseNotesButton"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="135dp"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:layout_marginTop="8dp"
+                android:gravity="bottom"
+                android:onClick="courseNotesClicked"
+                android:text="Notes"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toLeftOf="@+id/endAlarmSwitch"
+                app:layout_constraintTop_toBottomOf="@+id/endAlarmSwitch" />
+
+            <Button
+                android:id="@+id/courseAssessmentButton"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="135dp"
+                android:layout_height="@dimen/calendarButtonSquare"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:gravity="bottom"
+                android:onClick="courseAssessmentsClicked"
+                android:text="@string/assessments"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toRightOf="@+id/courseNotesButton"
+                app:layout_constraintTop_toTopOf="@+id/courseNotesButton" />
+
+            <EditText
+                android:id="@+id/etCourseTitle"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:enabled="true"
+                android:hint="@string/title"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                app:layout_constraintLeft_toRightOf="@+id/tvCourseTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvCourseTitle" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="120dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="end"
+                android:text="Description"
+                android:textAlignment="viewEnd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
+
+            <Switch
+                android:id="@+id/startAlarmSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginTop="8dp"
+                android:onClick="startAlarmToggled"
+                android:text="@string/remindMe"
+                app:layout_constraintLeft_toLeftOf="@+id/termStart"
+                app:layout_constraintTop_toBottomOf="@+id/termStart" />
+
+            <Switch
+                android:id="@+id/endAlarmSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:onClick="endAlarmToggled"
+                android:text="@string/remindMe"
+                app:layout_constraintLeft_toLeftOf="@+id/termEnd"
+                app:layout_constraintTop_toBottomOf="@+id/termEnd" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

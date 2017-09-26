@@ -32,11 +32,7 @@ public class CourseList extends AppCompatActivity {
         toolbar.setTitle("Course List");
 
         courseList=(ListView)findViewById(R.id.courseList);
-
-
         extras = getIntent().getExtras();
-
-
 
         setCourseListView();
 
@@ -49,7 +45,7 @@ public class CourseList extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setCourseListView(){

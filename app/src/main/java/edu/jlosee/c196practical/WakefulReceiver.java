@@ -37,22 +37,26 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
 
     //When the time is reached, this is called.
     public void onReceive(Context context, Intent intent) {
-        Bundle test = intent.getExtras();
+        Bundle notificationExtras = intent.getExtras();
 
+        String noteMsg = this.notificationMessage;
+        int notificationID = 65535;
         //See if the intent extras are retained.
-        if (test!=null){
-            String noteMsg = test.getString("notificationMessage");
+        if (notificationExtras!=null){
 
+            noteMsg = notificationExtras.getString("notificationMessage");
+            notificationID=notificationExtras.getInt("alertID");
             Log.d("WakefulReceiver", "onReceive arg Intent notification message: " +noteMsg);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.drawable.ic_stat_name);
-        builder.setContentText(notificationMessage);
+        builder.setContentText(noteMsg);
 
         // Creates an Intent for the Activity
         Intent notifyIntent = new Intent(context, activityClass);
         // Sets the Activity to start in a new, empty task
+
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         // Creates the PendingIntent
@@ -73,8 +77,7 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds an anonymous Notification object from the builder, and
         // passes it to the NotificationManager
-        int id = 66525;
-        mNotificationManager.notify(id, builder.build());
+        mNotificationManager.notify(notificationID, builder.build());
 
         //Indicate that this has been completed.
         WakefulReceiver.completeWakefulIntent(intent);
@@ -96,19 +99,26 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
             this.activityClass=activityClass;
         }
 
-        if (targetAlarmTime!=null){
-            Log.d("WakefulReceiver", "null Calendar passed to setAlarm, using default of current time+20s");
+        if (targetAlarmTime==null) {
+            Log.d("WakefulReceiver", "null Calendar passed to setAlarm");
         }else{
-
+            Log.d("WakefulReceiver", "setAlarm set to "+targetAlarmTime.get(Calendar.YEAR)+"-"
+                    +(targetAlarmTime.get(Calendar.MONTH)+1)+"-"+
+                    targetAlarmTime.get(Calendar.DAY_OF_MONTH));
         }
 
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, WakefulReceiver.class);
-        intent.putExtra("notificationMessage", "TestMessageFromSetAlarm");
+        intent.putExtra("notificationMessage", this.notificationMessage);
+        intent.putExtra("alertID", id);
 
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id, intent, 0);
 
         if (targetAlarmTime != null) {
+            //TODO: DEBUG: REMOVE THIS:
+            targetAlarmTime.setTimeInMillis(System.currentTimeMillis()+2000);
+
+            //DO NOT REMOVE THIS:
             mAlarmManager.set(AlarmManager.RTC_WAKEUP, targetAlarmTime.getTimeInMillis(), alarmIntent);
         }
         MainActivity.sdfNoTime.setCalendar(targetAlarmTime);

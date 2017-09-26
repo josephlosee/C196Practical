@@ -9,40 +9,20 @@
     tools:context="edu.jlosee.c196practical.TermDetails"
     tools:showIn="@layout/activity_term_details">
 
-    <TextView
-        android:id="@+id/termEditTitle"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/new_term_information"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:typeface="normal"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/termTitle"
-        app:layout_constraintLeft_toRightOf="@+id/termTitle"
-        app:layout_constraintRight_toLeftOf="@+id/termTitle"
-        app:layout_constraintTop_toBottomOf="parent" />
-
     <EditText
         android:id="@+id/termTitle"
         android:layout_width="215dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="21dp"
         android:ems="10"
         android:hint="@string/term_name"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termEditTitle"
-        tools:layout_constraintLeft_creator="1" />
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_editor_absoluteY="43dp" />
 
     <EditText
         android:id="@+id/termStart"
