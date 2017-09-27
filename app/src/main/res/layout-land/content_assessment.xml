@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="edu.jlosee.c196practical.AssessmentActivity"
+    tools:showIn="@layout/activity_assessment">
+
+    <EditText
+        android:id="@+id/etAssessmentTitle"
+        android:layout_width="373dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:inputType="textPersonName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/assessmentDueDate"
+        android:layout_width="165dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Due Date"
+        android:inputType="date"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etAssessmentTitle" />
+
+    <Button
+        android:id="@+id/pickDueDateButton"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:drawable/ic_menu_today"
+        android:onClick="endDateCalendar"
+        app:layout_constraintLeft_toRightOf="@+id/assessmentDueDate"
+        app:layout_constraintTop_toTopOf="@+id/assessmentDueDate" />
+
+    <Switch
+        android:id="@+id/assessmentAlertSwitch"
+        android:layout_width="120dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:onClick="assessmentAlertToggled"
+        android:switchMinWidth="40dp"
+        android:text="@string/remindMe"
+        app:layout_constraintLeft_toRightOf="@+id/pickDueDateButton"
+        app:layout_constraintTop_toBottomOf="@+id/etAssessmentTitle"
+        tools:checked="false" />
+
+    <ListView
+        android:id="@+id/assessmentNotes"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assessmentAlertSwitch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginEnd="16dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="248dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/etAssessmentTitle"
+        android:layout_marginLeft="8dp">
+
+        <RadioButton
+            android:id="@+id/objButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:text="Objective"
+            app:layout_constraintLeft_toRightOf="@+id/perfButton"
+            app:layout_constraintTop_toBottomOf="@+id/etAssessmentTitle" />
+
+        <RadioButton
+            android:id="@+id/perfButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0.25"
+            android:text="Performance"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etAssessmentTitle" />
+    </RadioGroup>
+
+</android.support.constraint.ConstraintLayout>

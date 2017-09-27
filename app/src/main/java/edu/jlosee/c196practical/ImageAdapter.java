@@ -24,8 +24,6 @@ import java.util.concurrent.ExecutorService;
  */
 
 public class ImageAdapter extends BaseAdapter {
-
-
     ArrayList<NoteImage> imageList = new ArrayList<>();
 
     private int imageHeightDP = 48;

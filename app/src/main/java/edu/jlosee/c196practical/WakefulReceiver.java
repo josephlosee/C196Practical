@@ -115,8 +115,8 @@ public class WakefulReceiver extends WakefulBroadcastReceiver {
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id, intent, 0);
 
         if (targetAlarmTime != null) {
-            //TODO: DEBUG: REMOVE THIS:
-            targetAlarmTime.setTimeInMillis(System.currentTimeMillis()+2000);
+            //DEBUG: REMOVE THIS:
+            //targetAlarmTime.setTimeInMillis(System.currentTimeMillis()+2000);
 
             //DO NOT REMOVE THIS:
             mAlarmManager.set(AlarmManager.RTC_WAKEUP, targetAlarmTime.getTimeInMillis(), alarmIntent);

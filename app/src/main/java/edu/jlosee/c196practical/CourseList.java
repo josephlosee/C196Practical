@@ -45,6 +45,9 @@ public class CourseList extends AppCompatActivity {
             }
         });
 
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

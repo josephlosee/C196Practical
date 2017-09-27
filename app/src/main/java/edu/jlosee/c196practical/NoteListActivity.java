@@ -3,15 +3,18 @@ package edu.jlosee.c196practical;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import static edu.jlosee.c196practical.CourseDetails.COURSE_ID;
 import static edu.jlosee.c196practical.CourseDetails.NOTE_ID;
 
 /**
@@ -32,13 +35,17 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState!=null){
+            courseID=savedInstanceState.getLong(CourseDetails.COURSE_ID);
+            isAssessmentList=savedInstanceState.getBoolean(CourseDetails.IS_ASSESSMENT);
+        }
         setContentView(R.layout.activity_note_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final Bundle noteExtras = getIntent().getExtras();
+        Bundle noteExtras = getIntent().getExtras();
 
         noteList = (ListView)findViewById(R.id.noteList);
 
@@ -68,7 +75,7 @@ public class NoteListActivity extends AppCompatActivity {
                     //Flag for assessment notes
                     newNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
 
-                    startActivity(newNoteIntent);
+                    startActivityForResult(newNoteIntent,8888);
                 }
             });
         }else{
@@ -80,7 +87,7 @@ public class NoteListActivity extends AppCompatActivity {
                     assessmentIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, (long) -1); //flag value
                     assessmentIntent.putExtra(CourseDetails.COURSE_ID, courseID);
 
-                    startActivity(assessmentIntent);
+                    startActivityForResult(assessmentIntent, 8888);
                 }
             });
         }
@@ -95,7 +102,8 @@ public class NoteListActivity extends AppCompatActivity {
         String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
         int[] to = {android.R.id.text1};
 
-        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
+                notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         noteList.setAdapter(cursorAdapter);
 
@@ -106,11 +114,15 @@ public class NoteListActivity extends AppCompatActivity {
                 selectedItemIntent.putExtra(NOTE_ID, id);
                 selectedItemIntent.putExtra(NoteDetails.PARENT_ID, courseID);
                 selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
+                //startActivityForResult(selectedItemIntent, 8888);
                 startActivity(selectedItemIntent);
             }
         });
     }
 
+    /**
+     *
+     */
     private void setAssessmentList(){
         this.setTitle("Assessments");
         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
@@ -133,28 +145,43 @@ public class NoteListActivity extends AppCompatActivity {
                 selectedItemIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, id);
                 selectedItemIntent.putExtra(CourseDetails.COURSE_ID, courseID);
                 //selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
+                //startActivityForResult(selectedItemIntent, 8888);
                 startActivity(selectedItemIntent);
             }
         });
     }
 
-
+/*
     private void refreshCursorAdapter(){
         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
         String[] whereArgs = {String.valueOf(courseID)};
         if (!isAssessmentList){
             notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
+            String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
+            int[] to = {android.R.id.text1};
+            cursorAdapter  = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
+                    notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         }else{
             notes = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, where, whereArgs, null);
-        }
+            String[] from = {DBOpenHelper.TITLE, DBOpenHelper.ASSESSMENT_DUE_DATE};// + " " + DBOpenHelper.COURSE_CODE};
+            int[] to = {android.R.id.text1, android.R.id.text1};
+            cursorAdapter  = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
+                    notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
-        cursorAdapter.changeCursor(notes);
-    }
+        }
+        noteList.setAdapter(cursorAdapter);
+    }*/
 
     @Override
-    public void onResume(){
-        super.onResume();
-
-        refreshCursorAdapter();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                this.finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
+
 }//end of class

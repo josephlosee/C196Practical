@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -81,7 +82,6 @@ public class TermDetails extends AppCompatActivity {
 
         }
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Term Details");
@@ -132,20 +132,6 @@ public class TermDetails extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                save();
-                EditText termTitle = (EditText) findViewById(R.id.termTitle);
-                EditText termStart = (EditText) findViewById(R.id.termStart);
-                EditText termEnd = (EditText) findViewById(R.id.termEnd);
-
-                String title = termTitle.getText().toString();
-                String start = termStart.getText().toString();
-                String end = termEnd.toString();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (getCurrentFocus()!=null){
             getCurrentFocus().clearFocus();
@@ -165,10 +151,15 @@ public class TermDetails extends AppCompatActivity {
                 this.onBackPressed();
                 break;
             case R.id.action_delete:
-                if (courseList.getChildCount()==0){
-                    Snackbar.make(this.getCurrentFocus(), "You cannot delete a term that has courses assigned.", Snackbar.LENGTH_LONG);
-                }else{
-                    alertDeleteConfirmation();
+                if (courseCursor!=null) {
+                    //nullity check because if the user is quick this will crash the program.
+                    if (courseCursor.getCount() > 0) {
+                        Snackbar.make(getWindow().getDecorView(),
+                                "You cannot delete a term that has courses assigned.",
+                                Snackbar.LENGTH_LONG).show();
+                    } else {
+                        alertDeleteConfirmation();
+                    }
                 }
                 break;
             default:
@@ -187,26 +178,33 @@ public class TermDetails extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "OK selected", Snackbar.LENGTH_LONG).show();
-                //ret=true;
+                //Snackbar.make(getWindow().getDecorView(), "OK selected", Snackbar.LENGTH_LONG).show();
                 deleteTerm();
             }
         });
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "Cancel selected", Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(getWindow().getDecorView(), "Cancel selected", Snackbar.LENGTH_LONG).show();
             }
         });
 
         alertDialog.show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.delete_only, menu);
+        return true;
+    }
+    /**
+     * Deletes the current term from the database
+     */
     private void deleteTerm(){
         //Delete the assessment from the table
         String delete = DBOpenHelper.TABLE_ID+"=?";
         String[] vals = {String.valueOf(this.termID)};
-        MainActivity.dbProvider.delete(DBProvider.ASSESSMENT_URI, delete, vals);
+        MainActivity.dbProvider.delete(DBProvider.TERM_URI, delete, vals);
         //Delete the alert if its been created.
         startReceiver.cancelAlarm(this, (int)termID);
         endReceiver.cancelAlarm(this, (int)termID);
@@ -214,9 +212,16 @@ public class TermDetails extends AppCompatActivity {
         this.finish();
     }
 
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        setCourseListView();
+        super.onActivityReenter(resultCode, data);
+    }
 
+    /**
+     * Saves all relevant term information to the SQLite DB
+     */
     protected void save(){
-
         EditText termTitle = (EditText) findViewById(R.id.termTitle);
         EditText termStart = (EditText) findViewById(R.id.termStart);
         EditText termEnd = (EditText) findViewById(R.id.termEnd);
@@ -242,9 +247,14 @@ public class TermDetails extends AppCompatActivity {
         if (termID==-1){
             //If the term is a new one (-1 flag value), insert it
             Log.d("EditTerm", "Adding a new term...");
-            Uri insertUri = MainActivity.dbProvider.insert(DBProvider.TERM_URI, termInfo);
-            if (insertUri!=null){
-                this.termID=Long.parseLong(insertUri.getLastPathSegment());
+            //Sanity check to avoid empty terms being added
+            if (!(title.isEmpty()&start.isEmpty()&end.isEmpty())) {
+                Uri insertUri = MainActivity.dbProvider.insert(DBProvider.TERM_URI, termInfo);
+                if (insertUri != null) {
+                    this.termID = Long.parseLong(insertUri.getLastPathSegment());
+                }
+            }else{
+                Snackbar.make(getWindow().getDecorView(), "Enter term information.", Snackbar.LENGTH_LONG).show();
             }
         }else{
             Log.d("EditTerm", "Updating term: "+termID);
@@ -270,7 +280,7 @@ public class TermDetails extends AppCompatActivity {
         Log.d("EditTerm", "Toggled switch to "+alert.isChecked());
 
         //Set or cancel the alarm depending on if the toggle is now checked.
-        if (alert.isChecked()){
+        if (alert.isChecked()&termID!=-1){
             Calendar alarmCal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
@@ -300,7 +310,7 @@ public class TermDetails extends AppCompatActivity {
         Log.d("EditTerm", "Toggled switch to "+alert.isChecked());
 
         //Set or cancel the alarm depending on if the toggle is now checked.
-        if (alert.isChecked()){
+        if (alert.isChecked()&termID!=-1){
             Calendar alarmCal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
@@ -345,7 +355,7 @@ public class TermDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent courseIntent = new Intent(TermDetails.this, CourseDetails.class);
                 courseIntent.putExtra(CourseDetails.COURSE_ID, id);
-                startActivity(courseIntent);
+                startActivityForResult(courseIntent, 8888);
             }
         });
     }
@@ -359,7 +369,7 @@ public class TermDetails extends AppCompatActivity {
         Intent removeCourseIntent = new Intent(this, CourseList.class);
         removeCourseIntent.putExtra(MainActivity.TERM_ID, termID);
         removeCourseIntent.putExtra(CourseList.FLAG_REMOVE_COURSE, true);
-        startActivity(removeCourseIntent);
+        startActivityForResult(removeCourseIntent, 8888);
     }
 
     /**
@@ -371,13 +381,13 @@ public class TermDetails extends AppCompatActivity {
         Intent addCourseIntent = new Intent(this, CourseList.class);
         addCourseIntent.putExtra(MainActivity.TERM_ID, termID);
         addCourseIntent.putExtra(CourseList.FLAG_REMOVE_COURSE, false);
-        startActivity(addCourseIntent);
+        startActivityForResult(addCourseIntent, 8888);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setCourseListView();
-        //super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void startDateCalendar(View view) {

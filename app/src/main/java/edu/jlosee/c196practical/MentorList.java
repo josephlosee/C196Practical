@@ -44,7 +44,7 @@ public class MentorList extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent mentorDetails = new Intent(MentorList.this, MentorDetails.class);
-                startActivity(mentorDetails);
+                startActivityForResult(mentorDetails,8888);
             }
         });
 
@@ -170,7 +170,7 @@ public class MentorList extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Intent mentorDetails = new Intent(MentorList.this, MentorDetails.class);
                 mentorDetails.putExtra(MentorDetails.MENTOR_ID, id);
-                startActivity(mentorDetails);
+                startActivityForResult(mentorDetails,8888);
             }
         });
     }

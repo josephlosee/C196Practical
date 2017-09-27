@@ -1,5 +1,6 @@
 package edu.jlosee.c196practical;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -58,6 +60,7 @@ public class AssessmentActivity extends AppCompatActivity {
         etDueDate = (EditText) findViewById(R.id.assessmentDueDate);
         noteList = (ListView) findViewById(R.id.assessmentNotes);
         objectiveRadio = (RadioButton)findViewById(R.id.objButton);
+        performanceRadio = (RadioButton)findViewById(R.id.perfButton);
         alertToggle = (Switch)findViewById(R.id.assessmentAlertSwitch);
 
         //Fill all the information
@@ -92,18 +95,24 @@ public class AssessmentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Lets the user add a note to the assessment.
                 Intent assessmentNoteIntent = new Intent(AssessmentActivity.this, NoteDetails.class);
+                assessmentNoteIntent.putExtra(CourseDetails.NOTE_ID, new Long(-1));
                 assessmentNoteIntent.putExtra(NoteDetails.PARENT_ID, assessmentID);
                 assessmentNoteIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, false);
                 startActivity(assessmentNoteIntent);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Snackbar.make(getWindow().getDecorView(),
+                "Tap to create a new note for this assessment!",
+                Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onBackPressed() {
         saveAssessment();
-        super.onBackPressed();
+        this.finishActivity(Activity.RESULT_OK);
+        this.finish();
     }
 
     //Save the assessment information and finish
@@ -214,8 +223,11 @@ public class AssessmentActivity extends AppCompatActivity {
 
         switch(id){
             case(android.R.id.home):
-                onBackPressed();
-                break;
+                /*saveAssessment();
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                NavUtils.navigateUpTo(this, intent);
+                */break;
             case(R.id.action_delete):
                 alertDeleteConfirmation();
                 break;
@@ -305,5 +317,18 @@ public class AssessmentActivity extends AppCompatActivity {
                     }}, endCal.get(Calendar.YEAR),
                 endCal.get(Calendar.MONTH),
                 endCal.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        this.setNoteList();
+        super.onActivityReenter(resultCode, data);
+
+    }
+
+    @Override
+    protected void onResume() {
+        this.setNoteList();
+        super.onResume();
     }
 }//END OF CLASS

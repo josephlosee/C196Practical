@@ -59,9 +59,6 @@
             android:name=".NoteListActivity"
             android:label="@string/title_activity_note"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.TermDetails" />
         </activity>
         <activity
             android:name=".AssessmentActivity"
@@ -69,7 +66,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.jlosee.c196practical.TermDetails" />
+                android:value="edu.jlosee.c196practical.NoteListActivity" />
         </activity>
         <activity
             android:name=".CourseDetails"
@@ -96,8 +93,8 @@
             android:label="@string/title_activity_note_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NoteImageView" />
-        <activity android:name=".CourseList"
-            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".CourseList"/>
         <activity
             android:name=".MentorDetails"
             android:label="@string/title_activity_mentor_details"

@@ -1,5 +1,6 @@
 package edu.jlosee.c196practical;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -111,7 +112,6 @@ public class CourseDetails extends AppCompatActivity {
             setMentorCourseList();
         }
 
-        toolbar.inflateMenu(R.menu.delete_only);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -225,6 +225,7 @@ public class CourseDetails extends AppCompatActivity {
         MainActivity.dbProvider.delete(DBProvider.COURSE_URI, delete, vals);
         startReceiver.cancelAlarm(this, ((int)courseID+COURSE_START_PREFIX));
         endReceiver.cancelAlarm(this, ((int)courseID+COURSE_END_PREFIX));
+        this.finishActivity(Activity.RESULT_OK);
         this.finish();
     }
 

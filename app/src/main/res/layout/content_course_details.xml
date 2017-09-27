@@ -129,7 +129,6 @@
                 android:layout_weight="2.25"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:text="@string/lorem_ipsem"
                 android:textSize="14sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"

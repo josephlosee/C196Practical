@@ -140,6 +140,7 @@ public class NoteDetails extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView);
@@ -283,7 +284,7 @@ public class NoteDetails extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "OK selected", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getWindow().getDecorView(), "OK selected", Snackbar.LENGTH_LONG).show();
                 //ret=true;
                 deleteNote();
             }
@@ -291,7 +292,7 @@ public class NoteDetails extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "Cancel selected", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getWindow().getDecorView(), "Cancel selected", Snackbar.LENGTH_LONG).show();
             }
         });
 

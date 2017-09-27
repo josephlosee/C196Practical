@@ -39,24 +39,6 @@ public class TermListActivity extends AppCompatActivity{
         setTermListView();
     }
 
-    /*    NOTE: This doesn't appear to work without a content resolver, which requires 4.4+
-    @Override
-    public Loader onCreateLoader(int i, Bundle bundle) {
-        Uri term = DB
-        return new CursorLoader(getApplicationContext(), DBProvider.TERM_URI, null, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        cursorAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-        cursorAdapter.swapCursor(null);
-
-    }*/
-
     public void setTermListView(){
         termListView = (ListView)findViewById(R.id.lvTermsSummary);
 
@@ -70,18 +52,22 @@ public class TermListActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(TermListActivity.this, TermDetails.class);
 
-                Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(view, ""+id, Snackbar.LENGTH_LONG).show();
 
                 intent.putExtra(MainActivity.TERM_ID, id);
 
-                startActivity(intent);
+                startActivityForResult(intent, 8888);
             }
         });
     }
 
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
+        setTermListView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setTermListView();
     }
 } //End of Class

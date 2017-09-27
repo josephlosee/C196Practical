@@ -1,5 +1,6 @@
 package edu.jlosee.c196practical;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -53,7 +55,13 @@ public class MentorDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         saveMentor();
-        super.onBackPressed();
+        this.finishActivity(Activity.RESULT_OK);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.delete_only, menu);
+        return true;
     }
 
     @Override
@@ -83,7 +91,10 @@ public class MentorDetails extends AppCompatActivity {
         mentorVals.put(DBOpenHelper.PHONE, mentorPhone);
 
         if (mentorID==-1){
-            MainActivity.dbProvider.insert(DBProvider.MENTOR_URI, mentorVals);
+            //Avoid blank mentor information being saved
+            if (!(mentorName.isEmpty()&mentorPhone.isEmpty()&mentorEmail.isEmpty())){
+                MainActivity.dbProvider.insert(DBProvider.MENTOR_URI, mentorVals);
+            }
         }
         else{
             String where = DBOpenHelper.TABLE_ID+"=?";
@@ -99,7 +110,7 @@ public class MentorDetails extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "OK selected", Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(getWindow().getDecorView(), "OK selected", Snackbar.LENGTH_LONG).show();
                 //ret=true;
                 deleteMentor();
             }
@@ -107,18 +118,26 @@ public class MentorDetails extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(getCurrentFocus(), "Cancel selected", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getWindow().getDecorView(), "Cancel selected", Snackbar.LENGTH_LONG).show();
             }
         });
 
         alertDialog.show();
     }
 
+    /**
+     *
+     */
     public void deleteMentor(){
         String delete = DBOpenHelper.TABLE_ID+"=?";
         String[] vals = {String.valueOf(this.mentorID)};
+        //Delete the mentor from the mentor table
         MainActivity.dbProvider.delete(DBProvider.MENTOR_URI, delete, vals);
+        //Delete the mentor references from the course mentors table
+        String courseMentorDelete = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_MENTOR+"=?";
+        MainActivity.dbProvider.delete(DBProvider.COURSE_MENTORS_URI, courseMentorDelete, vals);
 
+        this.finishActivity(Activity.RESULT_OK);
         this.finish();
     }
 }//END OF CLASS
