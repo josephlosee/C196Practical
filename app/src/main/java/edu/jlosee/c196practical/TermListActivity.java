@@ -68,6 +68,7 @@ public class TermListActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        onResume();
         setTermListView();
     }
 } //End of Class

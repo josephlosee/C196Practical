@@ -114,20 +114,13 @@ public class CourseDetails extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //Trying this to stop the keyboard from showing
-        if (this.getCurrentFocus()!=null){
-            this.getCurrentFocus().clearFocus();
-        }
-
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setMentorCourseList() {
 
         String[]joinArgs = {String.valueOf(courseID)};
         Cursor mentorsCursor = MainActivity.dbProvider.rawQuery(DBOpenHelper.MENTOR_JOIN_QUERY, joinArgs);
-//            Cursor mentorsCursor = MainActivity.dbProvider.rawQuery("Select * from Mentor where _idCourse=?;", joinArgs);
 
         mentorList = (ListView)findViewById(R.id.mentorList);
         CursorAdapter mentorAdapter = new CursorAdapterMentor(this, mentorsCursor);
@@ -172,7 +165,8 @@ public class CourseDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         saveCourse();
-        super.onBackPressed();
+        finishActivity(Activity.RESULT_OK);
+        finish();
     }
 
     @Override
@@ -181,8 +175,7 @@ public class CourseDetails extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case android.R.id.home:
-                //NavUtils.navigateUpFromSameTask(this);
-                this.onBackPressed();
+                onBackPressed();
                 break;
             case R.id.action_delete:
                 alertDeleteConfirmation();

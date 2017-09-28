@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar initial = Calendar.getInstance();
         //Fill in terms
         for (int t = 0; t <=5; t++){
+            Snackbar.make(getWindow().getDecorView(), "Created test date. "+(t+1)+"/6", Snackbar.LENGTH_SHORT).show();
             Calendar start = (Calendar)initial.clone();
             Calendar end = (Calendar)start.clone();
             start.add(Calendar.MONTH, 3*t);

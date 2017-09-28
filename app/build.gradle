@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        MySigning {
+            keyAlias '196Submission'
+            keyPassword '196Submission'
+            storeFile file('C:/Users/Joe/Desktop/196Submission_Signing.jks')
+            storePassword '196Submission'
+        }
     }
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -10,8 +16,9 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.MySigning
     }
     buildTypes {
         release {

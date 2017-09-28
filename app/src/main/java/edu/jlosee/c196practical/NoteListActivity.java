@@ -94,6 +94,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void setNoteList(){
+        this.setTitle("Note List");
         String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
         String[] whereArgs = {String.valueOf(courseID)};
 
@@ -114,7 +115,6 @@ public class NoteListActivity extends AppCompatActivity {
                 selectedItemIntent.putExtra(NOTE_ID, id);
                 selectedItemIntent.putExtra(NoteDetails.PARENT_ID, courseID);
                 selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
-                //startActivityForResult(selectedItemIntent, 8888);
                 startActivity(selectedItemIntent);
             }
         });
@@ -144,33 +144,10 @@ public class NoteListActivity extends AppCompatActivity {
                 Intent selectedItemIntent = new Intent(NoteListActivity.this, AssessmentActivity.class);
                 selectedItemIntent.putExtra(AssessmentActivity.ASSESSMENT_ID, id);
                 selectedItemIntent.putExtra(CourseDetails.COURSE_ID, courseID);
-                //selectedItemIntent.putExtra(NoteDetails.BOOL_ISCOURSENOTE, true);
-                //startActivityForResult(selectedItemIntent, 8888);
                 startActivity(selectedItemIntent);
             }
         });
     }
-
-/*
-    private void refreshCursorAdapter(){
-        String where = DBOpenHelper.TABLE_ID+DBOpenHelper.TABLE_COURSE+"=?";
-        String[] whereArgs = {String.valueOf(courseID)};
-        if (!isAssessmentList){
-            notes = MainActivity.dbProvider.query(DBProvider.NOTES_URI, null, where, whereArgs, null);
-            String[] from = {DBOpenHelper.TITLE};// + " " + DBOpenHelper.COURSE_CODE};
-            int[] to = {android.R.id.text1};
-            cursorAdapter  = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
-                    notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        }else{
-            notes = MainActivity.dbProvider.query(DBProvider.ASSESSMENT_URI, null, where, whereArgs, null);
-            String[] from = {DBOpenHelper.TITLE, DBOpenHelper.ASSESSMENT_DUE_DATE};// + " " + DBOpenHelper.COURSE_CODE};
-            int[] to = {android.R.id.text1, android.R.id.text1};
-            cursorAdapter  = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1,
-                    notes, from, to, SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
-        }
-        noteList.setAdapter(cursorAdapter);
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

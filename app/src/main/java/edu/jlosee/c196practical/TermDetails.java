@@ -355,7 +355,8 @@ public class TermDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent courseIntent = new Intent(TermDetails.this, CourseDetails.class);
                 courseIntent.putExtra(CourseDetails.COURSE_ID, id);
-                startActivityForResult(courseIntent, 8888);
+                startActivity(courseIntent);
+                //startActivityForResult(courseIntent, 8888);
             }
         });
     }
